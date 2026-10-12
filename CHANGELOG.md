@@ -1,12 +1,16 @@
 # Changelog
 
-## 0.3.0 — Echi del Silenzio
-- Nuovo renderer 3D WebGL e texture atlas procedurale; nessuna libreria runtime.
-- Menu principale, selezione tre personaggi, introduzione, pause, mappa, diario e salvataggio.
-- Prologo ambientato in un rifugio, dialoghi NPC, commercio e recupero materiali.
-- 3 capitoli narrativi con obiettivi dinamici, predoni, Erranti e missione di scorta.
-- Movimento libero tra settori del centro storico, armi, cure, comandi gamepad e touch.
-- Documentati i limiti di fedeltà geografica, grafica e funzionalità non disponibili.
+## Alpha 0.4 — Cinque operazioni (12 ottobre 2026)
 
-## 0.2.0 — Aftermath
-- Primo prototipo Canvas 2D 3D con Piazza delle Erbe e una missione militare.
+- Da tre a quattro personaggi: due donne e due uomini, con classi ed equipaggiamenti differenti.
+- Da tre a sei armi: M4, P12, DMR, V9, pompa e AK; granate e fumogene.
+- Campagna ampliata a cinque missioni / 29 checkpoint con difese, rifornimenti, alleati, imboscate, scorte e due scelte narrative.
+- Menù di transizione delle missioni, diario espanso, contatori granate/fumo, nuovo salvataggio separato da 0.3.
+- Geometria della città suddivisa in chunk e culling in distanza; risoluzione più contenuta, tetto rendering 30 FPS, profilo basso predefinito su touch.
+- Personaggi procedurali arrotondati e articolati; oscillazione durante la camminata, nuove sagome delle armi e fumo volumetrico semplice.
+- Migliorata la linea di vista del combattimento e la copertura alleata.
+- Test logici del percorso completo superati con GPU simulata. Rendering WebGL reale e DualShock fisico **non verificati** nell'ambiente di test disponibile.
+
+## Alpha 0.3
+
+Prima campagna Echi del Silenzio, rifugio, tre protagonisti, avventura WebGL procedurale.

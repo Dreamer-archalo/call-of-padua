@@ -1,60 +1,75 @@
 # CALL OF PADUA — Echi del Silenzio
 
-**Prototype 0.3 · Independent story-driven post-apocalyptic FPS / free-roam adventure.**
+**Alpha 0.4 · Cinque operazioni narrative · WebGL browser game · Progetto originale di Dreamer-archalo**
 
-[**Gioca su GitHub Pages →**](https://dreamer-archalo.github.io/call-of-padua/)
+[Gioca alla versione pubblicata](https://dreamer-archalo.github.io/call-of-padua/)
 
-Un'esperienza originale ambientata in una versione post-apocalittica del centro storico di Padova. Prima di ogni scontro c'è un luogo dove tornare: il rifugio del Duomo. Le missioni si attivano parlando con i personaggi; il giocatore può esplorare liberamente e tornare alla campagna quando vuole.
+Un FPS con visuale in prima/terza persona, una reinterpretazione post-apocalittica **stilizzata** di Padova, quattro personaggi, sei armi e una campagna narrativa in cinque missioni. **Il gioco inizia in un rifugio presso il Duomo, non durante un combattimento.** L'area di gioco comprende versioni giocabili di Piazza delle Erbe, Piazza della Frutta, Piazza dei Signori, il Ghetto e il Duomo, il Caffè Pedrocchi e la Basilica del Santo, collegate senza cambiare schermata.
 
-## Che cosa funziona nella versione 0.3
+> **Limiti precisi:** non è un prodotto AAA, fotorealistico o un facsimile topografico di Padova. Gli edifici restano procedurali e semplificati; non ci sono ancora motion capture, cinematics registrate, doppiaggio, cooperativa online, IA con navigazione completa, mappe 1:1 o modelli professionali acquisiti tramite scansione. I tempi di missione, progettati intorno a circa 3–6 minuti di gioco normale, variano con velocità e scelte del giocatore; non sono tempi minimi imposti artificialmente.
 
-- **Nuovo motore WebGL** con geometrie 3D, profondità, texture procedurali, foschia, color grading CSS e ambientazione continua. Nessuna libreria JavaScript esterna necessaria per eseguire il gioco.
-- **Menu principale**, continua partita, nuova campagna, esplorazione libera, impostazioni, introduzione narrativa.
-- **Tre personaggi selezionabili**: Lea Ferretti (ricognizione), Nico Valenti (resistenza), Ada Mercuri (medicina). Equipaggiamenti iniziali diversi; la storia principale è condivisa.
-- **Base iniziale** presso il Duomo: la responsabile Marta, il mercante Rocco, una guardia e un rifugio accessibile. L'avventura inizia senza sparatorie obbligatorie.
-- **Campagna originale articolata in un prologo, tre capitoli e un epilogo**: farmacia dei Signori, ripetitore delle Erbe, attacco dei predoni, incontro con Stefano alla Basilica e ritorno al rifugio.
-- **Mondo esplorabile senza teletrasporto tra settori** con una mappa schematica del centro storico: Duomo, Piazza dei Signori, Piazza delle Erbe, Piazza della Frutta, Pedrocchi, Basilica del Santo, strade laterali, macerie, mercati e zone contese.
-- **Combattimento FPS**: carabina, pistola, fucile a pompa, rinculo, ricarica, munizioni, ferite e medicazioni. Minacce IA semplici (predoni a distanza, Erranti ravvicinati).
-- **Terza persona opzionale** (`V`), minimappa generale (`M`), diario (`J`), bottega/scambio, casse di materiali, munizioni, medicazioni, dialoghi.
-- **Salvataggio locale automatico** nel browser, senza account. Non si sincronizza su altri dispositivi.
-- **Controller standard/Gamepad API**, tastiera e mouse, due joystick virtuali e pulsanti touch. Supporto PS4 sperimentale: test fisico non ancora effettuato.
+## Campagna: cinque missioni
+
+| # | Missione | Luoghi | Eventi distintivi |
+|---|---|---|---|
+| 01 | **Cenere sotto i Portici** | Duomo, Ghetto, Piazza dei Signori | Incontro con Marta, recupero antibiotici, pattuglia, difesa dell'evacuazione (125 s), consegna |
+| 02 | **La Frequenza Morta** | Piazza della Frutta, Piazza delle Erbe | Rocco, alleato della Guardia, radio, difesa a ondate (65 s), decodifica e ritorno |
+| 03 | **L'Ultimo Corriere** | Caffè Pedrocchi, Frutta, Erbe | Borsa-trappola, imboscata, ritrovamento di Irene, scorta, scelta civili o armi |
+| 04 | **Il Santo non Risponde** | Basilica del Santo, Erbe, Duomo | Ritrovamento Stefano, scorte, assedio degli Erranti (70 s), scorta e rientro |
+| 05 | **La Notte delle Campane** | Erbe, Frutta, Signori, Duomo | Sabotaggio, combattimento, difesa (75 s), trasmissione pubblica o segreta, epilogo |
+
+La storia è guidata, ma tra gli obiettivi la città è percorribile, con rifornimenti da raccogliere, zone occupate e personaggi alleati. Il progresso e le due decisioni narrative sono salvati localmente nel browser. Non usare la navigazione in incognito se vuoi conservare il salvataggio.
+
+## Quattro protagonisti e classi
+
+- **Lea Ferretti** — Esploratrice: velocità superiore, SMG, fumogene.
+- **Nico Valenti** — Assalto: maggiore salute, M4, più granate.
+- **Ada Mercuri** — Medico: più medicazioni, fucile a pompa.
+- **Elio Sartori** — Tiratore scelto: maggiore precisione, DMR.
+
+Sei armi equipaggiabili: carabina M4, pistola P12, fucile DMR, SMG V9, fucile a pompa e carabina AK. Munizioni, rinculo, tempi di ricarica, gittata e danni differenziati. Granate a frammentazione e fumogene sono disponibili in numero limitato. Alleati partecipano ai combattimenti; Marta, Rocco, Irene e Stefano intervengono nella storia.
 
 ## Comandi
 
-| Azione | Tastiera e mouse | Controller standard | Touch |
-|--|--|--|--|
-| Muovi / guarda | WASD / mouse | Stick sinistro / destro | Stick virtuali |
-| Spara | Mouse sinistro | R2 | FUOCO |
-| Interagisci / dialoghi | E / Invio | Quadrato / X nei dialoghi | USA |
-| Armi | 1 / 2 / 3 / Q | Triangolo | — |
-| Ricarica | R | Cerchio | RIC. |
-| Medicazione | H | X | CURA |
-| Scatta | Maiusc | L3 | CORRI |
-| Terza persona | V | — | — |
-| Mappa / Diario | M / J | Freccia su (mappa) | MAPPA |
+| Azione | PC | Controller standard / DualShock 4* | Touch |
+|---|---|---|---|
+| Muoversi / visuale | WASD / mouse | Stick sinistro / destro | Stick virtuali |
+| Sparare | Click sinistro | R2 | FUOCO |
+| Ricaricare | R | Cerchio | RIC. |
+| Interagire | E | Quadrato | USA |
+| Cambiare arma | Q, tasti 1–6 | Triangolo | ARMA |
+| Granata | G | R1 | GRAN. |
+| Fumogena | T | L1 | FUMO |
+| Cura | H | X | CURA |
+| Correre | Shift | L3 | CORRI |
+| Visuale | V | — | — |
+| Mappa / diario | M / J | Freccia su / — | MAPPA / menu |
 | Pausa | P / Esc | OPTIONS | Ⅱ |
 
-## Nota tecnica e limiti reali
+*DualShock 4 fisico **non verificato** su tutte le combinazioni dispositivo/browser. La mappatura può variare fra browser e sistema operativo.
 
-Questo **non è un gioco AAA fotorealistico**, né un prodotto di livello Call of Duty / The Last of Us. È un prototipo browser in WebGL, realizzato senza modelli fotogrammetrici né asset commerciali. Le facciate, i personaggi e gli edifici sono proceduralmente semplificati: non vanno spacciati per una ricostruzione misurata di Padova. Il centro storico qui è una **interpretazione giocabile** con monumenti identificabili, non una replica geografica verificata. Le animazioni sono essenziali, l'IA è semplice, la guida è sperimentale. **Non c'è ancora cooperativa online né multiplayer**, e il DualShock 4 fisico non è stato collaudato.
+## Prestazioni e affidabilità
 
-Il progetto funziona completamente nel browser moderno con WebGL attivo. Il solo menu potrebbe essere visibile su sistemi senza WebGL, ma la partita richiede accelerazione WebGL. L'ambiente è progettato per PC e browser mobili moderni; prestazioni e compatibilità dipendono dall'hardware.
+- Renderer 3D WebGL 1 autonomo, senza librerie JavaScript online; nessuna installazione e nessuna dipendenza runtime.
+- La geometria statica è suddivisa in porzioni spaziali, disegnate soltanto entro un raggio di distanza dalla camera.
+- Rendering limitato a 30 frame al secondo, qualità bassa predefinita sui dispositivi touch, scala dinamica al variare della qualità e riduzione automatica se gli FPS rimangono bassi.
+- Umani procedurali più arrotondati e con arti animati, movimento della telecamera durante il passo, sagoma armi più dettagliata, fumo 3D.
+- Verifiche di progressione automatizzate per **tutti i 29 checkpoint** della campagna, movimento, classi, inventario, scelte, mappa e pausa.
 
-## Sviluppo futuro (da non considerare già realizzato)
+**Limite dei test:** l'ambiente automatizzato usato per la verifica non offre un contesto WebGL reale. I test JavaScript ricreano le interfacce GPU con un mock e verificano la logica, ma **non dimostrano** FPS reali, assenza di blocchi grafici o stabilità su uno specifico telefono, PC o controller fisico. Non viene promessa assenza assoluta di bug. Il tuo test sul dispositivo resta importante.
 
-1. Dati cartografici verificati, scala urbana coerente e ricostruzione dettagliata dei monumenti.
-2. Modelli 3D umani e animazioni realistiche, motion capture, rigging, inventario visivo e coperture.
-3. Asset PBR, materiali e illuminazione fisica ottimizzati, ombre dinamiche e audio spaziale professionale.
-4. IA con pathfinding e cooperativa online con server autorevole.
-5. Interni dettagliati, guida credibile, persistente economia rifugi e fazioni.
+## Test
 
-## File
+Serve Python, Chromium e Playwright installati; esegui:
 
-- `index.html` interfacce e menu.
-- `style.css` menu cinematografici e HUD.
-- `game.js` renderer WebGL, città, IA, controller, narrativa, collisioni, missioni e salvataggi.
-- `smoke_test.py` test automatici browser (richiede Python, Playwright, Chromium, GPU/software WebGL).
+```bash
+python smoke_test.py
+```
 
-## Licenza e attribuzione
+Lo script utilizza un contesto grafico simulato per testare la logica: non è un benchmark GPU.
 
-Progetto sperimentale originale di **Dreamer-archalo**. Non affiliato con Activision, Naughty Dog, Sony o altri titolari di proprietà intellettuali. Nessun asset tratto da Call of Duty o The Last of Us.
+## Direzione e attribuzione
+
+CALL OF PADUA è un progetto indipendente, distinto da `padova-open-world`. È un'opera originale, non affiliata ad Activision o ai creatori di *The Last of Us*. Non vengono inclusi asset o personaggi protetti di altri giochi. Padova è un luogo reale; la storia e le fazioni sono inventate.
+
+Per avvicinarsi alla qualità visiva richiesta serve una successiva pipeline professionale per modelli 3D architettonici, personaggi skinnati, animazioni e lightmaps/illuminazione moderna: non basta aggiungere poligoni al prototipo.
