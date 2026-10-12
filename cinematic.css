@@ -1,0 +1,20 @@
+/* Narrative layers: translucent, readable, mobile-compatible, no extra rendering pass. */
+#storyCaption{position:fixed;z-index:6;left:50%;bottom:18.5%;transform:translate(-50%,12px);width:min(680px,87vw);text-align:center;pointer-events:none;opacity:0;transition:opacity .35s,transform .35s;text-shadow:0 2px 8px #000,0 2px 20px #000;}
+#storyCaption.visible{opacity:1;transform:translate(-50%,0)}
+#storyCaption small{display:block;color:#d6b98c;font-weight:800;font-size:11px;letter-spacing:.23em;margin-bottom:8px}
+#storyCaption p{margin:0;font-family:Georgia,serif;font-size:clamp(16px,1.55vw,23px);line-height:1.45;color:#faf1df}
+#storyEnvironment{position:fixed;z-index:5;left:25px;top:17%;width:min(320px,38vw);pointer-events:none;opacity:0;transform:translateY(9px);}
+#storyEnvironment.reveal{animation:envReveal 5.7s ease both}
+#storyLocation{font:800 23px 'Barlow Condensed',Arial,sans-serif;letter-spacing:.09em;color:#d2b78b}
+#storyLocationInfo{font:12px/1.7 Georgia,serif;color:#ede3d1;margin-top:7px;text-shadow:0 2px 7px #000}
+@keyframes envReveal{0%{opacity:0;transform:translateY(12px)}12%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+#chapterDetail{border-block:1px solid #8d9a8460;padding:18px 0;margin:14px 0 20px;color:#e3e3d5}
+#chapterDetail .fieldLine{font:700 10px 'IBM Plex Mono',monospace;color:#c9a87b;letter-spacing:.14em;margin:7px 0}
+#chapterDetail>p{font:15px/1.6 Georgia,serif;margin:8px 0 16px;color:#e6e6db}
+#chapterDetail blockquote{border-left:2px solid #cdb082;margin:12px 0 22px;padding:7px 0 7px 18px;font:italic 16px/1.55 Georgia,serif;color:#f2e5d1}
+#chapterDetail strong{font:700 22px 'Barlow Condensed',Arial,sans-serif;letter-spacing:.07em;color:#f5e8ce}
+#missionBrief .chapterPanel{width:min(690px,92vw);max-height:94dvh;overflow-y:auto}
+#missionBrief .chapterPanel>p#briefBody{font:11px/1.5 ui-monospace,monospace;letter-spacing:.1em;color:#a5b7b4}
+.cinematicConversation{background:linear-gradient(110deg,rgba(12,20,19,.96),rgba(12,26,26,.87))!important;box-shadow:0 12px 50px #000c!important;}
+.cop-quiet #crosshair{opacity:.48;transition:opacity .2s}
+@media(max-width:800px){#storyCaption{bottom:36%;width:92vw}#storyCaption small{font-size:9px}#storyCaption p{font-size:15px}#storyEnvironment{top:13%;left:15px;width:51vw}#storyLocation{font-size:16px}#storyLocationInfo{font-size:10px}#chapterDetail>p{font-size:13px}#chapterDetail blockquote{font-size:14px}#missionBrief .chapterPanel{max-height:90dvh}}

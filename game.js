@@ -37,25 +37,25 @@
       {title:'05 / LA NOTTE DELLE CAMPANE',blurb:'Prendere il controllo della frequenza e decidere a chi affidare Padova.'}
     ];
     const objectiveData=[
-      {title:'Parla con Marta',sub:'La responsabile del rifugio ti aspetta al Duomo.',at:{x:-165,z:79},tag:'MARTA',ch:'I — CENERE',kind:'talk',speaker:'MARTA',lines:['Ci servono antibiotici. E non ci resta molto tempo.','La vecchia farmacia dei Signori è rimasta intatta, ma qualcuno sta cercando lo stesso bottino.','Se senti degli spari, non voltarti: abbiamo bisogno che tu torni.']},
+      {title:'Parla con Marta',sub:'La responsabile del rifugio ti aspetta al Duomo.',at:{x:-165,z:79},tag:'MARTA',ch:'I — CENERE',kind:'talk',speaker:'MARTA',lines:['Ieri Anna ha chiesto se domani torneranno i treni. Non ho saputo cosa risponderle. Oggi ha la febbre e non abbiamo antibiotici.','Un’infermiera ha segnato una farmacia sotto i portici dei Signori. Ci sono medicine, forse. Rocco ha tracciato il percorso sulla carta.','Non voglio un eroe. Voglio che tu torni a raccontarci com’è là fuori. E prenditi un minuto per guardarti intorno: questa era casa nostra.']},
       {title:'Attraversa il Ghetto',sub:'Raggiungi il passaggio a ovest dei Signori.',at:{x:-126,z:45},tag:'PASSAGGIO',ch:'I — CENERE',kind:'reach'},
       {title:'Recupera gli antibiotici',sub:'Ispeziona la farmacia in Piazza dei Signori.',at:{x:-113,z:12},tag:'FARMACIA',ch:'I — CENERE',kind:'use',action:'medicine'},
       {title:'Proteggi la via del Ghetto',sub:'Copri i civili fino al termine dell’evacuazione: 125 secondi.',at:{x:-150,z:58},tag:'EVACUAZIONE',ch:'I — CENERE',kind:'hold',seconds:125,spawn:'raiders'},
-      {title:'Consegna le scorte',sub:'Rientra al Duomo e parla con Marta.',at:{x:-165,z:79},tag:'RIFUGIO',ch:'I — CENERE',kind:'talk',speaker:'MARTA',lines:['Hai salvato la piccola Anna. Non è una vittoria da poco.','Ma la farmacia non era vuota: qualcuno ha portato via le nostre frequenze radio.','Rocco vuole parlarti. Ha visto dove vanno i convogli.']},
+      {title:'Consegna le scorte',sub:'Rientra al Duomo e parla con Marta.',at:{x:-165,z:79},tag:'RIFUGIO',ch:'I — CENERE',kind:'talk',speaker:'MARTA',lines:['Anna ha ripreso a dormire. Sua madre mi ha chiesto il tuo nome. Non sapeva nemmeno che fossi partito per lei.','Quando ero piccola passavo da quella piazza con mio padre. L’odore del pane arrivava fin qui. Adesso ci sono soltanto fogli sui muri.','Rocco ha trovato una vecchia frequenza di emergenza. C’è qualcuno là fuori. Se scegliamo di ascoltare, potrebbero ascoltarci a loro volta.']},
       {title:'Ottieni le frequenze da Rocco',sub:'Preparati a uscire: potresti avere bisogno di rinforzi.',at:{x:-150,z:99},tag:'ROCCO',ch:'II — RADIO',kind:'talk',speaker:'ROCCO',lines:['Le Torri ascoltano ogni segnale. Abbiamo un vecchio ripetitore alle Erbe.','Ti affido una batteria. Quando trasmetterai, la città saprà dove sei.','La Guardia ci darà una mano, almeno finché non capirà cosa stiamo facendo.']},
       {title:'Raggiungi Piazza della Frutta',sub:'Passa a nord del Palazzo della Ragione.',at:{x:0,z:-54},tag:'FRUTTA',ch:'II — RADIO',kind:'reach'},
       {title:'Attiva il ripetitore delle Erbe',sub:'Ripristina la corrente e avvia il segnale.',at:{x:13,z:58},tag:'RADIO',ch:'II — RADIO',kind:'use',action:'radio'},
       {title:'Difendi la trasmissione',sub:'Resisti all’assalto: ondate ostili e countdown di 65 s.',at:{x:13,z:58},tag:'DIFENDI',ch:'II — RADIO',kind:'hold',seconds:65,spawn:'radio'},
       {title:'Decifra il messaggio',sub:'Torna al pannello radio e registra la voce.',at:{x:13,z:58},tag:'RIPETITORE',ch:'II — RADIO',kind:'use',action:'radio'},
-      {title:'Riferisci a Marta',sub:'La registrazione contiene un nome: Irene.',at:{x:-165,z:79},tag:'MARTA',ch:'II — RADIO',kind:'talk',speaker:'MARTA',lines:['Irene era la nostra staffetta. Se è viva, conosce la via verso il Santo.','Il segnale arriva dal Pedrocchi. Vai, ma evita di farti seguire.']},
+      {title:'Riferisci a Marta',sub:'La registrazione contiene un nome: Irene.',at:{x:-165,z:79},tag:'MARTA',ch:'II — RADIO',kind:'talk',speaker:'MARTA',lines:['Irene mi ha lasciato un biglietto prima di partire. Diceva: se non torno, non cercatemi. Non ho intenzione di rispettarlo.','Il segnale arriva dal Pedrocchi. Concediti un momento mentre attraversi il centro. Non possiamo passare tutta la vita a correre.']},
       {title:'Trova il segnale al Pedrocchi',sub:'Esplora la zona dei portici universitari.',at:{x:165,z:-40},tag:'PEDROCCHI',ch:'III — CORRIERE',kind:'reach'},
       {title:'Cerca la borsa del corriere',sub:'Il segnale arriva da una bancarella distrutta.',at:{x:175,z:-38},tag:'BORSA',ch:'III — CORRIERE',kind:'use',action:'bag'},
       {title:'Sopravvivi all’imboscata',sub:'I predoni ti hanno chiuso la via di fuga.',at:{x:160,z:-40},tag:'IMBOSCATA',ch:'III — CORRIERE',kind:'clear',spawn:'ambush'},
-      {title:'Raggiungi Irene',sub:'Trova la staffetta nascosta alla Frutta.',at:{x:34,z:-58},tag:'IRENE',ch:'III — CORRIERE',kind:'talk',speaker:'IRENE',lines:['La borsa era un’esca. Ci sono riusciti: siamo circondati.','Conosco un passaggio, ma non lascerò il mio compagno ferito.', 'Se vuoi la posizione del Santo, devi prima portarmi verso un luogo sicuro.']},
+      {title:'Raggiungi Irene',sub:'Trova la staffetta nascosta alla Frutta.',at:{x:34,z:-58},tag:'IRENE',ch:'III — CORRIERE',kind:'talk',speaker:'IRENE',lines:['La borsa era un’esca. Quando ho sentito i passi dietro di me ho capito tutto, ma ormai era tardi.','Conosco un passaggio per le Erbe. Ci venivo a prendere il caffè con mio fratello. Lui non è riuscito a uscire dalla città.', 'Ti darò tutte le informazioni, te lo prometto. Prima, però, dobbiamo uscire insieme. Sono stanca di perdere persone.']},
       {title:'Accompagna Irene alle Erbe',sub:'Proteggi Irene durante l’attraversamento.',at:{x:-7,z:70},tag:'ESTRAZIONE',ch:'III — CORRIERE',kind:'reach',spawn:'escort'},
       {title:'Scegli cosa salvare',sub:'Irene ha due informazioni. Decidi quale seguire.',at:{x:-7,z:70},tag:'DECISIONE',ch:'III — CORRIERE',kind:'choice',choices:['METTI IN SALVO I CIVILI','RECUPERA LE ARMI DELLE TORRI']},
       {title:'Parti per la Basilica',sub:'Una nuova voce chiama dal Santo.',at:{x:125,z:145},tag:'SANTO',ch:'IV — BASILICA',kind:'reach'},
-      {title:'Trova Stefano',sub:'Il sopravvissuto è accanto alla Basilica.',at:{x:135,z:179},tag:'STEFANO',ch:'IV — BASILICA',kind:'talk',speaker:'STEFANO',lines:['Sono qui da tre giorni. Hanno bloccato tutti gli accessi.','Gli Erranti hanno preso il chiostro. Servono le medicine per gli altri.','Dammi copertura e tornerò con te.']},
+      {title:'Trova Stefano',sub:'Il sopravvissuto è accanto alla Basilica.',at:{x:135,z:179},tag:'STEFANO',ch:'IV — BASILICA',kind:'talk',speaker:'STEFANO',lines:['Non pensavo più di sentire una voce che conoscesse il nome di questa città. Mi chiamo Stefano. Sono qui da tre giorni.','Ho passato la notte ad ascoltare le campane che non suonano. Dietro il chiostro ci sono altri sopravvissuti, alcuni feriti.','Non lasciarmi qui. Non ti sto chiedendo di salvarmi da solo: camminerò con te, se mi indichi la strada.']},
       {title:'Recupera il kit medico',sub:'Cerca tra i resti vicino al Santo.',at:{x:177,z:185},tag:'SCORTE',ch:'IV — BASILICA',kind:'use',action:'medicine'},
       {title:'Difendi il sopravvissuto',sub:'Resisti per 70 secondi; la polvere richiama gli Erranti.',at:{x:139,z:177},tag:'ASSEDIO',ch:'IV — BASILICA',kind:'hold',seconds:70,spawn:'infected'},
       {title:'Apri la via di fuga',sub:'Raggiungi il fuoristrada abbandonato.',at:{x:76,z:121},tag:'USCITA',ch:'IV — BASILICA',kind:'reach'},
@@ -65,7 +65,7 @@
       {title:'Elimina i rinforzi',sub:'La Milizia ha localizzato la tua posizione.',at:{x:0,z:-55},tag:'RINFORZI',ch:'V — CAMPANE',kind:'clear',spawn:'finale'},
       {title:'Resisti in Piazza dei Signori',sub:'Proteggi il segnale per 75 secondi.',at:{x:-122,z:-2},tag:'DIFENDI',ch:'V — CAMPANE',kind:'hold',seconds:75,spawn:'siege'},
       {title:'Decidi il futuro del rifugio',sub:'Pubblicare il segnale o proteggere la posizione?',at:{x:-122,z:-2},tag:'LA SCELTA',ch:'V — CAMPANE',kind:'choice',choices:['TRASMETTI A TUTTI I SOPRAVVISSUTI','NASCONDI IL RIFUGIO ALLE TORRI']},
-      {title:'Torna da Marta',sub:'Racconta la tua decisione e chiudi la campagna.',at:{x:-165,z:79},tag:'RIFUGIO',ch:'V — CAMPANE',kind:'talk',speaker:'MARTA',lines:['Abbiamo perso molto, ma non il diritto di scegliere.','Ogni famiglia conoscerà la nostra decisione.','Il futuro non è sicuro, però Padova ha ricominciato a parlare.']},
+      {title:'Torna da Marta',sub:'Racconta la tua decisione e chiudi la campagna.',at:{x:-165,z:79},tag:'RIFUGIO',ch:'V — CAMPANE',kind:'talk',speaker:'MARTA',lines:['Ti ho visto tornare ogni volta. Sei stanco e si vede. Nessuno avrebbe dovuto chiederti tanto.','Qualunque cosa tu abbia deciso sulla radio, dovremo dirla agli altri. Non nasconderemo più le scelte dietro gli ordini.','All’alba qualcuno ha acceso una luce sul lato opposto della piazza. È piccola, ma si vede. Padova non ha ancora smesso di rispondere.']},
       {title:'PADOVA / ESPLORAZIONE LIBERA',sub:'Campagna conclusa. Esplora la città e aiuta il rifugio.',at:{x:0,z:40},tag:'LIBERO',ch:'EPILOGO',kind:'free'}
     ];
     const missionFromStage=q=>q<5?0:q<11?1:q<17?2:q<23?3:q<29?4:5;
@@ -487,6 +487,8 @@
             if (Math.random() > .46)
                 tree(x, z, .45 + rnd(0, .45));
         }
+        // Narrative set dressing is part of the same spatially culled mesh, not a second renderer.
+        window.COP_SCENERY?.build({mesh:staticMesh,box,cylinder,quad,ground,C});
         staticCount = staticMesh.length / 12;
         const groups=new Map(), stride=36, cell=85;
         for(let i=0;i<staticMesh.length;i+=stride){
@@ -542,6 +544,7 @@
         return 'CAFFÈ PEDROCCHI'; return 'CENTRO STORICO'; }
     function reveal() { let v = zoneLabel(); if (v !== S.location) {
         S.location = v;
+        window.COP_DIRECTOR?.zone(S,v);
         $('areaName').textContent = v;
         $('areaBanner').style.opacity = 1;
         S.zoneUntil = S.time + 1.8;
@@ -588,11 +591,11 @@
         S.ammo = weaponData.map(w=>w.mag);
         S.reserve = weaponData.map(w=>w.mag*4);
         S.kills = 0;S.chapterTimes=[0,0,0,0,0];
-    } S.mode = 'play'; S.stageArmed=false;S.stageStart=S.time;S.chapterStart=S.time;S.waveIds=[];S.inVehicle = false; S.dialogue = null; S.p.pitch = -.07; mouse.dx = mouse.dy = 0; key.clear(); visibility('hud', ...(matchMedia('(pointer:coarse)').matches ? ['touch'] : [])); reveal(); updateHUD(); notify(S.quest === objectiveData.length-1 ? 'ESPLORAZIONE LIBERA — PADOVA CENTRO' : 'RIFUGIO DEL DUOMO · CINQUE MISSIONI DISPONIBILI', 3); save(); }
+    } S.mode = 'play'; S.stageArmed=false;S.stageStart=S.time;S.chapterStart=S.time;S.waveIds=[];S.inVehicle = false; S.dialogue = null; S.p.pitch = -.07; mouse.dx = mouse.dy = 0; key.clear(); visibility('hud', ...(matchMedia('(pointer:coarse)').matches ? ['touch'] : [])); reveal(); window.COP_DIRECTOR?.begin(S); updateHUD(); notify(S.quest === objectiveData.length-1 ? 'ESPLORAZIONE LIBERA — PADOVA CENTRO' : 'RIFUGIO DEL DUOMO · CINQUE MISSIONI DISPONIBILI', 3); save(); }
     function intro() { S.mode = 'intro'; visibility('introMenu'); $('introTitle').textContent = 'NESSUNO VIENE A SALVARCI.'; $('introText').textContent = 'Da 187 giorni Padova è isolata. Il Duomo è un rifugio. Le piazze sono territorio conteso. Marta ha intercettato una voce proveniente dal Palazzo della Ragione.'; }
     function speak(name, lines, callback) { S.mode = 'dialogue'; S.dialogue = { name, lines }; S.diagIndex = 0; S.convCallback = callback || null; $('conversation').classList.remove('hidden'); displayLine(); document.exitPointerLock?.(); }
     function displayLine() { if (!S.dialogue)
-        return; $('speakerName').textContent = S.dialogue.name; $('speakerRole').textContent = S.dialogue.name === 'MARTA' ? 'COMUNICAZIONI / RIFUGIO' : 'SOPRAVVISSUTO / PADOVA'; $('speakerText').textContent = S.dialogue.lines[S.diagIndex]; }
+        return; $('speakerName').textContent = S.dialogue.name; $('speakerRole').textContent = S.dialogue.name === 'MARTA' ? 'COMUNICAZIONI / RIFUGIO' : 'SOPRAVVISSUTO / PADOVA'; $('speakerText').textContent = S.dialogue.lines[S.diagIndex]; window.COP_DIRECTOR?.dialogue(S,S.dialogue.name,S.dialogue.lines[S.diagIndex]); }
     function advanceLine() { if (!S.dialogue)
         return; S.diagIndex++; sound(410, .035, 'sine', .015); if (S.diagIndex < S.dialogue.lines.length) {
         displayLine();
@@ -829,7 +832,9 @@
         storedProj = matPerspective(S.mode === 'menu' ? PI / 3.4 : PI / 2.9, W / H, .07, 500);
         gl.uniformMatrix4fv(U.view, false, storedView);
         gl.uniformMatrix4fv(U.proj, false, storedProj);
-        gl.uniform3f(U.fog, .45, .51, .49);gl.uniform1f(U.opacity,1);
+        const moods=[[.45,.49,.43],[.40,.45,.41],[.38,.41,.42],[.48,.50,.46],[.29,.35,.35],[.44,.47,.42]];
+        const fog=moods[Math.min(5,missionFromStage(S.quest))];
+        gl.clearColor(fog[0],fog[1],fog[2],1);gl.uniform3f(U.fog,...fog);gl.uniform1f(U.opacity,1);
         for(const c of staticChunks){if(Math.hypot(cam.eye.x-c.x,cam.eye.z-c.z)>225)continue;bindBuffer(c.buffer);gl.drawArrays(gl.TRIANGLES,0,c.count);}
         let dyn = [];
         for (let a of allies)
@@ -1107,6 +1112,7 @@
     }
     function onStageEnter(){
       if(S.stageArmed)return;
+      window.COP_DIRECTOR?.stage(S,stage());
       S.stageArmed=true;S.stageStart=S.time;S.waveIds=[];S.waveSequence=0;
       const q=stage();
       if((q.spawn==='raiders'||q.spawn==='escort')&&q.kind!=='hold'){
@@ -1133,6 +1139,7 @@
       $('briefTitle').textContent=chapterData[lastChapter].title.substring(5);
       $('briefBody').textContent='Operazione conclusa. Tempo: '+Math.floor(time/60)+'m '+Math.floor(time%60)+'s. '+chapterData[nextChapter].blurb;
       $('briefNext').textContent='AVVIA MISSIONE '+(nextChapter+1)+' →';
+      window.COP_DIRECTOR?.finish(lastChapter,nextChapter,S);
       panel.classList.remove('hidden');document.exitPointerLock?.();
       save();
     }
@@ -1146,7 +1153,7 @@
         if(current<5)openBrief(previous,current);
         else {S.mode='brief';$('briefEyebrow').textContent='CAMPAGNA COMPLETATA';$('briefTitle').textContent='PADOVA RISPONDE';
           $('briefBody').textContent='Hai concluso cinque operazioni. Le conseguenze delle tue decisioni restano nella memoria del rifugio. La città ora è esplorabile liberamente.';
-          $('briefNext').textContent='TORNA NELLA CITTÀ →';$('missionBrief').classList.remove('hidden');document.exitPointerLock?.();}
+          $('briefNext').textContent='TORNA NELLA CITTÀ →';window.COP_DIRECTOR?.finish(previous,current,S);$('missionBrief').classList.remove('hidden');document.exitPointerLock?.();}
       }else notify('NUOVO OBIETTIVO · '+stage().title,3);
       updateHUD();save();sound(520,.22,'sine',.04);
     }
@@ -1436,7 +1443,7 @@
     } pollPad(); if (S.mode === 'play') {
         S.p.yaw += touchInput.look.x * dt * 2.2 * cfg.sensitivity;
         S.p.pitch = clamp(S.p.pitch - touchInput.look.y * dt * 1.5 * cfg.sensitivity, -1.0, 1.0);
-    } advance(dt); if(!document.hidden && t-renderedAt>1000/renderHz){renderedAt=t;render();frameCounter++;} requestAnimationFrame(step); }
+    } advance(dt); window.COP_DIRECTOR?.tick(S); if(!document.hidden && t-renderedAt>1000/renderHz){renderedAt=t;render();frameCounter++;} requestAnimationFrame(step); }
     $('briefNext').addEventListener('click',()=>{if(S.mode==='brief'){$('missionBrief').classList.add('hidden');S.mode='play';visibility('hud',...(matchMedia('(pointer:coarse)').matches?['touch']:[]));updateHUD();}});
     $('choiceA').addEventListener('click',()=>chooseOption(0));
     $('choiceB').addEventListener('click',()=>chooseOption(1));

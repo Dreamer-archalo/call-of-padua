@@ -1,16 +1,15 @@
 # Changelog
 
-## Alpha 0.4 — Cinque operazioni (12 ottobre 2026)
+## Alpha 0.5 — Director Cut
 
-- Da tre a quattro personaggi: due donne e due uomini, con classi ed equipaggiamenti differenti.
-- Da tre a sei armi: M4, P12, DMR, V9, pompa e AK; granate e fumogene.
-- Campagna ampliata a cinque missioni / 29 checkpoint con difese, rifornimenti, alleati, imboscate, scorte e due scelte narrative.
-- Menù di transizione delle missioni, diario espanso, contatori granate/fumo, nuovo salvataggio separato da 0.3.
-- Geometria della città suddivisa in chunk e culling in distanza; risoluzione più contenuta, tetto rendering 30 FPS, profilo basso predefinito su touch.
-- Personaggi procedurali arrotondati e articolati; oscillazione durante la camminata, nuove sagome delle armi e fumo volumetrico semplice.
-- Migliorata la linea di vista del combattimento e la copertura alleata.
-- Test logici del percorso completo superati con GPU simulata. Rendering WebGL reale e DualShock fisico **non verificati** nell'ambiente di test disponibile.
+- Mission-end reports with original dialogue, consequences and next-operation preview.
+- Ambient survivor/radio dialogue tied to 10 mission checkpoints; no forced interruption of NPC conversations.
+- Walking/exploration chapters subtly reduce crosshair prominence and introduce location narration.
+- Unique atmosphere palette across campaign chapters (including fog color).
+- Detailed procedural environmental props around Duomo, Ghetto, Signori, Erbe, Frutta, Pedrocchi and Santo integrated with existing WebGL culling.
+- Rewritten dialogue focused on character motivations, losses and sense of place.
+- Preserves established save key and existing core gameplay; no artificial timed chapter gating.
 
-## Alpha 0.3
+### Known limits
 
-Prima campagna Echi del Silenzio, rifugio, tre protagonisti, avventura WebGL procedurale.
+Prototype-grade procedural meshes are not photorealistic, Gamepad physical test and extended mobile soak test pending.
