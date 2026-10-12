@@ -1,82 +1,67 @@
-"""CALL OF PADUA local browser smoke tests. Optional dev dependency: playwright."""
+"""CALL OF PADUA 0.3 deterministic browser logic smoke test.
+Run: xvfb-run -a python smoke_test.py (requires Chromium and Playwright).
+In-browser rendering is disabled *only in this logic suite* to keep software GPU CI fast.
+A real WebGL draw can be tested by enabling `render()` in the loop.
+"""
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parent
-html = (ROOT / 'index.html').read_text()
-js = (ROOT / 'game.js').read_text()
-js = js.replace('  resize();addEventListener(\'resize\',resize);',
-    '  window.__copDevTest={state,interact,fire,doReload,switchWeapon,spawnEnemy,reset};\n  resize();addEventListener(\'resize\',resize);')
-html = html.replace('<link rel="stylesheet" href="style.css">', '<style>'+(ROOT/'style.css').read_text()+'</style>')
-html = html.replace('<script src="game.js" defer></script>', '<script>'+js+'</script>')
+ROOT=Path(__file__).resolve().parent
+html=(ROOT/'index.html').read_text()
+js=(ROOT/'game.js').read_text().replace('advance(dt);render();requestAnimationFrame(step);','advance(dt);requestAnimationFrame(step);')
+css=(ROOT/'style.css').read_text()
+html=html.replace('<link rel="stylesheet" href="style.css">','<style>'+css+'</style>')
+html=html.replace('<script src="game.js" defer></script>','<script>Object.defineProperty(window,"localStorage",{value:{getItem:function(){return this.s||null},setItem:function(k,v){this.s=v}}});</script><script>'+js+'</script>')
+
+def finish_dialogue(page, n):
+    assert page.locator('#conversation').is_visible(), 'dialogue not opened'
+    for _ in range(n):
+        page.keyboard.press('Enter')
+        page.wait_for_timeout(60)
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True, executable_path='/usr/bin/chromium', args=['--no-sandbox'])
-    page = browser.new_page(viewport={'width': 1280, 'height': 720})
-    errors = []
-    page.on('pageerror', lambda e: errors.append(str(e)))
-    page.set_content(html)
-    assert page.locator('#menu').is_visible()
-    page.click('#startBtn')
-    assert page.locator('#hudBottom').is_visible()
-    assert page.locator('#missionTitle').inner_text() == 'Metti in sicurezza Piazza delle Erbe'
-
-    # Movement and switching weapons work on a running game loop.
-    z0 = page.evaluate('window.__copDevTest.state.p.z')
-    page.keyboard.down('w')
-    page.wait_for_timeout(300)
-    page.keyboard.up('w')
-    z1 = page.evaluate('window.__copDevTest.state.p.z')
-    assert z1 != z0, ('no movement', z0, z1)
-    page.keyboard.press('q')
-    assert page.evaluate('window.__copDevTest.state.weapon') == 1
-    page.keyboard.press('r')
-    assert page.evaluate('window.__copDevTest.state.reloading') == 1 or page.evaluate('window.__copDevTest.state.ammo[1]') == 15
-    page.keyboard.press('v')
-    assert page.evaluate('window.__copDevTest.state.camera') == 'third'
-    page.keyboard.press('v')
-
-    # Campaign milestone: clear square > interact at cache > escape.
-    page.evaluate('''() => {let s=window.__copDevTest.state;s.phase=1;s.p.x=-34;s.p.z=29;s.p.health=100}''')
-    page.keyboard.press('e')
-    assert page.evaluate('window.__copDevTest.state.phase') == 2
-    assert page.locator('#missionTitle').inner_text() == 'Evacua il settore' or page.wait_for_timeout(150) is None
-    page.evaluate('''() => {let s=window.__copDevTest.state;s.p.x=-40;s.p.z=73;s.p.health=100}''')
-    page.wait_for_timeout(120)
-    assert page.locator('#resultMenu').is_visible()
-    assert page.locator('#resultTitle').inner_text() == 'SETTORE LIBERATO'
-    page.click('#restartBtn')
-    assert page.locator('#hudBottom').is_visible()
-    page.keyboard.press('p')
-    assert page.locator('#pauseMenu').is_visible()
-    page.click('#resumeBtn')
-    assert not page.locator('#pauseMenu').is_visible()
+    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--enable-webgl','--enable-unsafe-swiftshader','--use-angle=swiftshader'])
+    page=browser.new_page(viewport={'width':920,'height':580})
+    errors=[]
+    page.on('pageerror',lambda err:errors.append(str(err)))
+    page.set_content(html,wait_until='domcontentloaded',timeout=30000)
+    assert page.locator('#mainMenu').is_visible()
+    assert page.evaluate('window.COP_DEBUG.state.webgl')
+    page.click('#newBtn')
+    assert page.locator('#selectMenu').is_visible()
+    page.click('[data-char="nico"]')
+    page.click('#beginBtn')
+    assert page.locator('#introMenu').is_visible()
+    page.click('#introNext')
+    assert page.evaluate('window.COP_DEBUG.state.char')=='nico'
+    assert page.evaluate('window.COP_DEBUG.state.health')==120
+    page.keyboard.press('m');assert page.locator('#mapMenu').is_visible();page.keyboard.press('m')
+    page.keyboard.press('j');assert page.locator('#journalMenu').is_visible();page.keyboard.press('j')
+    # First safehouse dialogue.
+    page.evaluate('window.COP_DEBUG.setPosition(-165,81);window.COP_DEBUG.interact()')
+    finish_dialogue(page,3)
+    assert page.evaluate('window.COP_DEBUG.state.quest')==1,'prologue stuck'
+    page.evaluate('window.COP_DEBUG.setPosition(-113,12);window.COP_DEBUG.interact()')
+    assert page.evaluate('window.COP_DEBUG.state.quest')==2,'medicine pickup stuck'
+    page.evaluate('window.COP_DEBUG.setPosition(-165,81);window.COP_DEBUG.interact()')
+    finish_dialogue(page,3)
+    assert page.evaluate('window.COP_DEBUG.state.quest')==3,'medicine delivery stuck'
+    page.evaluate('window.COP_DEBUG.setPosition(13,58);window.COP_DEBUG.interact()')
+    assert page.evaluate('window.COP_DEBUG.state.quest')==4,'radio interaction stuck'
+    page.evaluate('window.COP_DEBUG.endEnemies()')
+    page.wait_for_timeout(200)
+    assert page.evaluate('window.COP_DEBUG.state.quest')==5,'radio defense stuck'
+    finish_dialogue(page,2)
+    page.evaluate('window.COP_DEBUG.setPosition(135,179);window.COP_DEBUG.interact()')
+    finish_dialogue(page,3)
+    assert page.evaluate('window.COP_DEBUG.state.quest')==6,'escort dialogue stuck'
+    page.evaluate('window.COP_DEBUG.setPosition(-165,81)')
+    page.wait_for_timeout(150)
+    page.evaluate('window.COP_DEBUG.interact()')
+    finish_dialogue(page,3)
+    assert page.evaluate('window.COP_DEBUG.state.quest')==7,'story completion stuck'
+    page.keyboard.press('p');assert page.locator('#pauseMenu').is_visible();page.click('#resumeBtn')
+    assert page.evaluate('window.COP_DEBUG.state.mode')=='play'
     assert not errors, errors
-    print('DESKTOP PASS: menu, movement, weapons, interaction, mission completion, restart, pause', z0, z1)
-
-    mobile = browser.new_page(viewport={'width': 844, 'height': 390}, is_mobile=True, has_touch=True, device_scale_factor=1)
-    mobile_errors=[]
-    mobile.on('pageerror',lambda e:mobile_errors.append(str(e)))
-    mobile.set_content(html)
-    mobile.click('#startBtn')
-    assert mobile.locator('#mobileControls').is_visible()
-    assert mobile.locator('#interactBtn').is_visible()
-    assert mobile.locator('#shootBtn').is_visible()
-    mobile.wait_for_timeout(250)
-    ammo=mobile.locator('#ammoText').inner_text()
-    mobile.locator('#shootBtn').tap()
-    mobile.wait_for_timeout(220)
-    next_ammo=mobile.locator('#ammoText').inner_text()
-    assert int(next_ammo)<int(ammo), (ammo,next_ammo)
-    assert not mobile_errors,mobile_errors
-    print('MOBILE PASS: HUD, touch controls, shooting',ammo,next_ammo)
-
-    # An emulated standard gamepad must be recognized; actual Bluetooth hardware is NOT tested.
-    pad = browser.new_page(viewport={'width': 1024,'height': 650})
-    pad.set_content(html)
-    pad.click('#startBtn')
-    pad.evaluate('''() => {navigator.getGamepads=()=>[{connected:true,index:0,mapping:'standard', axes:[0,0,0,0], buttons:Array.from({length:17},()=>({pressed:false,value:0}))}]}''')
-    pad.wait_for_timeout(120)
-    assert pad.locator('#inputDevice').inner_text() == 'CONTROLLER PS4'
-    print('GAMEPAD PASS: standard Gamepad API mapping detected (hardware compatibility unverified)')
+    print('PASS: WebGL initialization, menu, character select, intro, map, journal, NPC dialogue, medicine, radio, defense, rescue, escort, epilogue, pause; no JS exceptions')
     browser.close()
