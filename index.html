@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
   <meta name="theme-color" content="#080f15">
   <meta name="description" content="CALL OF PADUA — prototipo FPS open world post-apocalittico ambientato nel centro storico di Padova.">
-  <title>CALL OF PADUA — Prototipo 0.1</title>
+  <title>CALL OF PADUA — AFTERMATH / Alpha 0.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,35 +14,35 @@
   <div id="gameUI" class="hidden">
     <header id="topbar">
       <div class="brand"><span class="brandmark">COP</span><span>CALL OF <b>PADUA</b><small>SECTOR 01 // CENTRO STORICO</small></span></div>
-      <div id="missionBox"><span class="eyebrow">OBIETTIVO ATTIVO</span><div id="missionTitle">Metti in sicurezza Piazza delle Erbe</div><div class="missionProgress"><div id="missionBar"></div></div><div id="missionMeta">Elimina i predoni · 0 / 5</div></div>
+      <div id="missionBox"><span class="eyebrow">OBIETTIVO ATTIVO</span><div id="missionTitle">Metti in sicurezza Piazza delle Erbe</div><div class="missionProgress"><div id="missionBar"></div></div><div id="missionMeta">Neutralizza la pattuglia · 0 / 4</div></div>
       <div id="statusTop"><span id="fps">60 FPS</span><span id="inputDevice">TASTIERA + MOUSE</span></div>
     </header>
     <div id="compass">N <span id="heading">000°</span> <span id="sectorLabel">PIAZZA DELLE ERBE</span></div>
     <div id="crosshair"><i></i><i></i><i></i><i></i><span></span></div>
     <div id="damageIndicator">DANNI SUBITI</div>
     <div id="hitmarker">✕</div>
-    <div id="notice"></div>
+    <div id="notice"></div><div id="radioCall" aria-live="polite"><span>TRASMISSIONE / COMANDO</span><strong>SETTORE 01</strong><p>Riprendi il controllo della piazza.</p></div>
     <div id="gamepadHint" class="hidden">CONTROLLER PS4 CONNESSO</div>
     <footer id="hudBottom">
       <div id="minimapFrame"><canvas id="minimap" width="170" height="170"></canvas><div>PADOVA / PIAZZA ERBE</div></div>
       <div id="healthPanel"><span class="eyebrow">OPERATORE / SALUTE</span><div><strong id="healthText">100</strong><span class="healthUnit">/ 100</span></div><div class="meter"><div id="healthBar"></div></div></div>
-      <div id="centerControls">WASD MUOVI · MOUSE MIRA · CLICK SPARA · V VISUALE · R RICARICA</div>
+      <div id="centerControls">WASD MUOVI · MOUSE MIRA · CLICK SPARA · E INTERAGISCI · V VISUALE · R RICARICA</div>
       <div id="ammoPanel"><span class="eyebrow" id="weaponName">CARABINA MK18</span><div><strong id="ammoText">30</strong><span class="ammoReserve"> / <span id="reserveText">180</span></span></div><div class="ammoSubtitle">5.56 × 45 MM · <span id="cameraMode">FPS</span></div></div>
     </footer>
   </div>
   <div id="mobileControls" class="hidden">
     <div class="stick" id="moveStick"><span>MUOVI</span><div class="nub"></div></div>
     <div class="stick aimStick" id="lookStick"><span>VISUALE</span><div class="nub"></div></div>
-    <div class="touchButtons"><button id="shootBtn" class="fire">SPARA</button><button id="aimBtn">MIRA</button><button id="reloadBtn">RIC.</button><button id="jumpBtn">SALTA</button><button id="cameraBtn">FPS / 3P</button></div>
+    <div class="touchButtons"><button id="shootBtn" class="fire">SPARA</button><button id="aimBtn">MIRA</button><button id="reloadBtn">RIC.</button><button id="interactBtn">USA</button><button id="jumpBtn">SALTA</button><button id="cameraBtn">FPS / 3P</button></div>
     <button id="mobilePause">II</button>
   </div>
-  <div id="menu" class="overlay">
-    <div class="menuSide"><div class="stencil">P A D O V A · I T A L I A</div><div class="hazard">ZONA DI CONFLITTO<br>ACCESSO NON AUTORIZZATO</div><div class="gridCoord">45°24'N &nbsp; 11°52'E<br>ANNO 2034 · SETTORE 01</div></div>
-    <div class="menuContent"><div class="chapter">PROTOTIPO 0.1 · ALPHA GIOCABILE</div><h1>CALL OF<br><em>PADUA</em></h1><p class="subtitle">LA CITTÀ È CADUTA.<br>IL CENTRO È ANCORA CONTESO.</p>
-    <div class="line"></div><p class="description">Un primo settore esplorabile nel cuore di Padova. Affronta i predoni, libera Piazza delle Erbe e raggiungi il punto di estrazione.</p>
+  <div id="menu" class="overlay"><div class="menuScanline"></div>
+    <div class="menuSide"><div class="stencil">45°24’N · 11°52’E</div><div class="hazard">ZONA DI CONFLITTO<br>ACCESSO NON AUTORIZZATO</div><div class="gridCoord">45°24'N &nbsp; 11°52'E<br>ANNO 2034 · ZONA ROSSA</div></div>
+    <div class="menuContent"><div class="chapter">AFTERMATH // ALPHA 0.2 · SINGLE PLAYER</div><h1>CALL OF<br><em>PADUA</em></h1><p class="subtitle">LA CITTÀ È CADUTA.<br>IL CENTRO È ANCORA CONTESO.</p>
+    <div class="line"></div><p class="description">Piazza delle Erbe è occupata. Riprendi il settore, recupera le comunicazioni e attraversa le ultime linee nemiche per raggiungere l’estrazione.</p>
     <button class="mainButton" id="startBtn">INIZIA OPERAZIONE <span>↗</span></button>
     <div class="controlsHint"><b>PC:</b> WASD, mouse, click, R, V &nbsp;·&nbsp; <b>PS4:</b> DualShock 4 USB/Bluetooth &nbsp;·&nbsp; <b>Mobile:</b> touch</div>
-    <div class="menuFoot">BUILD 0.1.0 &nbsp;·&nbsp; DEMO OFFLINE &nbsp;·&nbsp; SINGOLO GIOCATORE</div></div>
+    <div class="menuFoot">BUILD 0.2.0 &nbsp;·&nbsp; DEMO OFFLINE &nbsp;·&nbsp; CAMPAGNA / SETTORE 01</div></div>
   </div>
   <div id="pauseMenu" class="overlay hidden"><div class="modal"><div class="eyebrow">OPERAZIONE SOSPESA</div><h2>PAUSA</h2><p>Prosegui la missione o modifica la sensibilità di mira.</p><label>SENSIBILITÀ CONTROLLER <input type="range" id="sensitivity" min="0.5" max="3" step="0.1" value="1.4"></label><button class="mainButton" id="resumeBtn">RIPRENDI <span>↗</span></button><button class="quietButton" id="returnBtn">TORNA AL MENU</button></div></div>
   <div id="resultMenu" class="overlay hidden"><div class="modal"><div class="eyebrow" id="resultTag">MISSIONE COMPLETATA</div><h2 id="resultTitle">SETTORE SICURO</h2><p id="resultDescription">Piazza delle Erbe è temporaneamente sotto controllo.</p><button class="mainButton" id="restartBtn">NUOVA OPERAZIONE <span>↗</span></button><button class="quietButton" id="resultMenuBtn">MENU PRINCIPALE</button></div></div>

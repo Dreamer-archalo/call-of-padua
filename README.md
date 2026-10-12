@@ -1,69 +1,62 @@
-# CALL OF PADUA — Sector 01
+# CALL OF PADUA / AFTERMATH
 
-**Alpha 0.1** — prototipo sperimentale di sparatutto 3D post-apocalittico, ambientato in una reinterpretazione del centro storico di Padova.
+**Alpha 0.2.0 · Sector 01: Piazza delle Erbe**
 
-## Cosa funziona adesso
+Prototipo giocabile indipendente di uno sparatutto in prima persona ambientato in una **reinterpretazione post-apocalittica del centro storico di Padova**. Un piccolo settore continuo, una missione completa e supporto sperimentale al controller DualShock 4. Tutto il codice del gioco è originale, in JavaScript e Canvas 2D, senza dipendenze runtime e senza richiesta di installazione.
 
-- Esplorazione continua di una zona *ispirata* a Piazza delle Erbe, Piazza della Frutta, Piazza dei Signori e Palazzo della Ragione.
-- Visuale in prima persona, con terza persona opzionale.
-- Movimento, salto, corsa, collisioni con edifici e ostacoli.
-- Due armi, munizioni, ricarica, colpi registrati sui nemici e granate.
-- Soldati IA semplici: pattuglia/inseguimento, attacco, danni, respawn.
-- Missione dimostrativa: neutralizzare cinque nemici e raggiungere l'estrazione.
-- Controller PS4 DualShock 4 via **Gamepad API** (con mapping standard quando disponibile).
-- Tastiera e mouse su PC; controlli touch su smartphone.
-- HUD con obiettivi, salute, munizioni, bussola e minimappa.
-- Zero dipendenze JavaScript, nessuna build necessaria. Funziona **anche offline** aprendo `index.html`.
+**[▶ Gioca nel browser](https://dreamer-archalo.github.io/call-of-padua/)**
 
-> **Limiti:** la mappa è un *blockout originale e approssimativo*, non una ricostruzione geografica certificata. Non sono ancora implementati multiplayer online, cooperativa, guida dei mezzi militari, interni esplorabili, progressione narrativa multi-missione, servizi server o sincronizzazione salvataggi. Grafica low-poly originale, NON equivalente a un titolo AAA.
+> **Ambito reale, senza esagerazioni:** è un *vertical slice stilizzato*, non un Call of Duty e non una ricostruzione fedele della città. I monumenti hanno riferimenti riconoscibili (Palazzo della Ragione, portici, piazze), ma distanze, edifici e strade sono un blockout immaginato per il gameplay. Non ci sono al momento multiplayer, IA avanzata, mezzi guidabili, interni esplorabili o open world completo.
 
-## Avvio rapido
+## Alpha 0.2 — cosa c'è di nuovo
 
-Apri `index.html` in Chrome, Edge, Firefox o Safari recente. Puoi anche pubblicare i tre file statici con GitHub Pages (repo pubblico o privato secondo il piano e le relative impostazioni).
+- Piazza delle Erbe rifinita con **loggiati ad arco**, copertura curva del Palazzo della Ragione, facciate, tetti, bancarelle, detriti, barricate, mezzi abbandonati, segnali militari e nuovo cielo atmosferico. Tutta geometria creata tramite codice (non fotografie usate come sfondo).
+- Missione in **tre fasi**: neutralizza quattro nemici, raggiungi il trasmettitore e premi **E / Quadrato / USA**, poi raggiungi l'estrazione durante una seconda ondata nemica.
+- Due armi distinguibili anche visivamente: carabina e pistola, con munizioni, caricatore, rinculo, mira ravvicinata, granate e attacco corpo a corpo.
+- **Audio sintetizzato** per spari, colpi e obiettivi, senza caricare file audio esterni (inizia dopo l'interazione dell'utente).
+- HUD più leggibile, minimappa, bussola, indicatore obiettivo, messaggi radio, salute, munizioni, pause e schermate di vittoria/sconfitta.
+- Supporto tastiera/mouse, controller con mappatura standard Gamepad API e controlli touch. **Corretto il bug** per cui un tocco rapido su «Spara» poteva non essere riconosciuto.
 
-In alternativa, per un server locale:
+## Avvia il gioco
+
+Da PC o smartphone apri: **https://dreamer-archalo.github.io/call-of-padua/**. La versione web non richiede un account o un server del gioco. Puoi anche aprire `index.html` direttamente in un browser moderno, senza rete.
+
+## Controlli
+
+| Azione | PC | Gamepad standard / DualShock 4* | Smartphone |
+|---|---|---|---|
+| Cammina / guarda | WASD / mouse | Stick sinistro / destro | Due stick virtuali |
+| Spara / mira | Click sinistro / destro | R2 / L2 | SPARA / MIRA |
+| Salta / corri | Spazio / Shift | X / L3 | SALTA / stick |
+| Ricarica o usa radio | R / E | Quadrato, in base alla vicinanza | RIC. / USA |
+| Cambia arma | Q o 1/2 | Triangolo | — |
+| Granata / corpo a corpo | G / F | R1 / R3 | — |
+| Prima / terza persona | V | — | FPS / 3P |
+| Pausa | P o Esc | OPTIONS | II |
+
+*La Gamepad API supporta controller con mappatura standard; un DualShock 4 fisico non è stato ancora testato su tutti i sistemi. Il pairing Bluetooth e le funzioni del controller variano in base a OS, browser e dispositivo. Vibrazione non implementata.*
+
+## Test eseguiti
+
+`smoke_test.py` contiene verifiche browser ripetibili per avvio, movimento, cambio arma, ricarica, telecamera, interazione con l'obiettivo, completamento missione, riavvio, pausa, HUD e sparo da smartphone, più riconoscimento di un controller standard simulato.
+
+Per eseguire i test in un ambiente di sviluppo con Python, Chromium e Playwright installati:
 
 ```bash
-python3 -m http.server 8080
+python smoke_test.py
 ```
 
-Poi apri `http://localhost:8080`.
+I test browser automatizzati **non sostituiscono** test reali su dispositivi, gamepad fisici e sessioni prolungate. Non viene dichiarata una garanzia di 60 FPS su tutti i dispositivi.
 
-## Comandi
+## Prossime priorità
 
-| Tastiera / mouse | Controller PS4 (mapping standard) | Azione |
-|---|---|---|
-| WASD | Stick sinistro | Movimento |
-| Mouse | Stick destro | Mira / visuale |
-| Mouse sinistro | R2 | Sparo |
-| Mouse destro | L2 | Mira ravvicinata (ADS) |
-| Spazio | X | Salto |
-| Shift | L3 | Corsa |
-| R | Quadrato | Ricarica |
-| Q, 1, 2 | Triangolo | Cambia arma |
-| G | R1 | Granata |
-| F | R3 | Corpo a corpo |
-| V | — | Prima / terza persona |
-| Esc, P | OPTIONS | Pausa |
+1. **Fedeltà geografica:** planimetria vera della zona Piazza Erbe/Frutta, Palazzo della Ragione e vicoli di collegamento, con un modello volumetrico coerente.
+2. **Qualità grafica:** passaggio a un motore 3D/WebGL, illuminazione e asset originali/CC0, LOD, texture, animazioni; il renderer Canvas attuale ha limiti visivi oggettivi.
+3. **Combattimento:** coperture, animazioni di soldati, hitbox/occlusioni corrette, IA tattica e bilanciamento.
+4. **Storytelling:** personaggi e fazioni originali, più missioni interconnesse.
+5. **Multiplayer cooperativo:** progetto server-authoritative a sé stante; non può essere realizzato con sole pagine statiche.
+6. **Profilazione mobile e gamepad:** test veri su diversi dispositivi e DualShock 4 collegato via USB/Bluetooth.
 
-Sul telefono: due stick virtuali, pulsanti per sparo, mira, salto, ricarica, visuale e pausa.
+### Indipendenza
 
-La compatibilità dei controller Bluetooth varia in base a sistema operativo, browser e autorizzazioni. Non è garantita su tutti gli smartphone; vibrazione non implementata.
-
-## Roadmap
-
-1. **0.1 — Vertical slice**: esperienza locale con AI e controller (questa release).
-2. **0.2 — Geografia**: cartografia di riferimento, ricostruzione dei volumi dei monumenti, percorsi più fedeli, esplorazione ottimizzata.
-3. **0.3 — Combattimento**: coperture, animazioni, audio, impatto dei colpi, squadre IA.
-4. **0.4 — Campagna**: personaggi originali, fazioni, dialoghi, missioni e conseguenze sul mondo.
-5. **0.5 — Veicoli**: guida di camion e mezzi militari, danni, spawn controllato.
-6. **0.6 — Online**: backend autorevole, lobby, partite cooperative e verifica anti-cheat.
-7. **0.7 — Smartphone**: profili qualitativi, impostazioni e ottimizzazione per GPU mobili.
-
-## Repository GitHub separato
-
-Nome suggerito: `call-of-padua`. Non importare in `padova-open-world`: questo progetto è indipendente per struttura, codice e contenuti. Una volta creato il nuovo repository, carica **index.html**, **style.css**, **game.js** e **README.md** nella root e abilita **Settings → Pages → Deploy from a branch → main / root**. Dopo la pubblicazione, l'URL sarà normalmente `https://<utente>.github.io/call-of-padua/`.
-
-## Licenza
-
-Il codice e gli asset originali sono prototipali. Nessuna associazione ufficiale con Call of Duty o con i rispettivi titolari dei marchi. Non utilizzare nomi o asset protetti di franchise terzi senza permesso.
+Questo repository non riutilizza codice né asset di `padova-open-world`; è un progetto autonomo. Non è affiliato con Activision né con la serie Call of Duty. Nessun asset protetto di videogiochi terzi è presente.
