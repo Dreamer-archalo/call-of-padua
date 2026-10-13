@@ -1,5 +1,17 @@
 # Changelog
 
+## Alpha 0.6 — Combat & Animation
+
+- Six weapon silhouettes: receivers, magazines, sights, handguards, optics, barrel details and suppressor-like muzzle geometry.
+- Reload staged animation: remove/insert magazine, support hand follows and bolt cycles; weapon swap has a draw transition.
+- Procedural muzzle flashes, shell ejection, spring recoil and hitmarker feedback. Synthetic layered shot sounds.
+- Actors turn with their heading, shift weight, alternate footfalls and coordinate arm movement with actual speed. Idle breathing and aiming stance.
+- Distance-based actor level-of-detail, quality settings High / experimental Ultra and automatic resolution step-down on persistent low frame rate.
+- Preserves all five missions and save compatibility.
+
+**Limits:** This is still procedural WebGL and cannot honestly be called AAA photorealism. Headless regression tests are not a substitute for real GPU or DualShock testing.
+
+
 ## Alpha 0.5 — Director Cut
 
 - Mission-end reports with original dialogue, consequences and next-operation preview.
