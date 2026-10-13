@@ -1,10 +1,12 @@
-# CALL OF PADUA / ECHI DEL SILENZIO — DIRECTOR CUT
+# CALL OF PADUA / ECHI DEL SILENZIO — COMBAT UPDATE
 
-**Alpha 0.5 | Original narrative FPS prototype for desktop/mobile browser**
+**Alpha 0.6 | Original narrative FPS prototype for desktop/mobile browser**
 
 [Play public build](https://dreamer-archalo.github.io/call-of-padua/)
 
-New in 0.5: environmental WebGL set dressing loaded into existing culling chunks (market shutters, tents, cables, memorials, barricades and triage posts); chapter-specific atmosphere; ambient location cards; radio/ally subtitles during quieter travel; personal dialogue rewrites; chapter-end story reports with consequences and previews for the next operation. All five original missions, 4 operators, 6 weapons, autosaves, map and controller support from 0.4 are retained.
+New in 0.6: six differentiated procedural guns, animated magazine changes and bolt movement, recoil recovery, muzzle flash and shell casings, right-click/L2 aim-down-sights, articulated actor movement driven by world speed, distant-actor LOD, and adaptive resolution with an experimental Ultra quality option. The project remains procedural and is not photorealistic.
+
+Previously in 0.5: environmental WebGL set dressing loaded into existing culling chunks (market shutters, tents, cables, memorials, barricades and triage posts); chapter-specific atmosphere; ambient location cards; radio/ally subtitles during quieter travel; personal dialogue rewrites; chapter-end story reports with consequences and previews for the next operation. All five original missions, 4 operators, 6 weapons, autosaves, map and controller support from 0.4 are retained.
 
 This is still an **original low-poly WebGL browser prototype**, NOT a photorealistic AAA game. The world layout is a gameplay interpretation of central Padova, not an architectural survey. No external art or copyright-protected characters were copied. Speech is subtitled, not professionally voice acted.
 
@@ -36,3 +38,6 @@ The storytelling has noncombat walking sections and scripted subtitled conversat
 Run `python smoke_test.py` with Playwright and Chromium installed. `narrative_test.py` adds smoke tests for environmental geometry, report content and zone/narrative overlays.
 
 See `CHANGELOG.md` for details.
+
+## 0.6 verification
+Campaign smoke tests: 29/29 stages passed. Mocked renderer test: movement, six weapons, firing, recoil, casings and staged reload passed. These are not physical PS4 or real-GPU benchmarks. Avoid assuming smooth 60 FPS on mobile.
