@@ -84,7 +84,8 @@
     function matPerspective(fov, aspect, near, far) { const f = 1 / Math.tan(fov / 2), r = 1 / (near - far); return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * r, -1, 0, 0, 2 * far * near * r, 0]); }
     function matLookAt(e, t) { let zx = e.x - t.x, zy = e.y - t.y, zz = e.z - t.z; let l = Math.hypot(zx, zy, zz) || 1; zx /= l; zy /= l; zz /= l; let xx = zz, xz = -zx; l = Math.hypot(xx, xz) || 1; xx /= l; xz /= l; let yx = zy * xz, yy = zz * xx - zx * xz, yz = -zy * xx; return new Float32Array([xx, yx, zx, 0, 0, yy, zy, 0, xz, yz, zz, 0, -(xx * e.x + xz * e.z), -(yx * e.x + yy * e.y + yz * e.z), -(zx * e.x + zy * e.y + zz * e.z), 1]); }
     const VS = `attribute vec3 aPos; attribute vec3 aNormal; attribute vec2 aUV; attribute float aTile; attribute vec3 aColor; uniform mat4 uProj,uView; varying vec2 vUV;varying float vTile,vFog;varying vec3 vCol;void main(){vec4 v=uView*vec4(aPos,1.);gl_Position=uProj*v;vUV=aUV;vTile=aTile;float sun=max(dot(normalize(aNormal),normalize(vec3(.42,.83,.37))),0.);float diff=.52+.47*sun;vCol=aColor*diff;vFog=clamp((-v.z-18.)/205.,0.,1.);}`;
-    const FS = `precision mediump float;uniform sampler2D uAtlas;uniform vec3 uFog;uniform float uOpacity;varying vec2 vUV;varying float vTile,vFog;varying vec3 vCol;void main(){float tile=floor(vTile+.5);vec2 cell=vec2(mod(tile,4.),floor(tile/4.));vec2 uv=(cell+vec2(.018)+fract(vUV)*.964)/4.;vec3 tx=texture2D(uAtlas,uv).rgb;vec3 col=tx*vCol;col=mix(col,uFog,vFog*vFog*.93);gl_FragColor=vec4(col,uOpacity);}`;
+    const FS = `precision mediump float;uniform sampler2D uAtlas,uFacade;uniform vec3 uFog;uniform float uOpacity;varying vec2 vUV;varying float vTile,vFog;varying vec3 vCol;void main(){float tile=floor(vTile+.5);vec2 cell=vec2(mod(tile,4.),floor(tile/4.));vec2 uv=(cell+vec2(.018)+fract(vUV)*.964)/4.;vec3 tx=texture2D(uAtlas,uv).rgb;
+if(vTile>=15.5){float ft=floor(vTile-15.5);vec2 cell2=vec2(mod(ft,4.),floor(ft/4.));vec2 fUV=vec2(clamp(vUV.x,.004,.996),1.-clamp(vUV.y,.004,.996));tx=texture2D(uFacade,(cell2+vec2(.002)+fUV*.996)/vec2(4.,2.)).rgb;}vec3 col=tx*vCol;col=mix(col,uFog,vFog*vFog*.93);gl_FragColor=vec4(col,uOpacity);}`;
     function shader(type, src) { let s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
         throw Error(gl.getShaderInfoLog(s)); return s; }
     const program = gl.createProgram();
@@ -95,7 +96,7 @@
         throw Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
     const A = { pos: gl.getAttribLocation(program, 'aPos'), normal: gl.getAttribLocation(program, 'aNormal'), uv: gl.getAttribLocation(program, 'aUV'), tile: gl.getAttribLocation(program, 'aTile'), color: gl.getAttribLocation(program, 'aColor') };
-    const U = { proj: gl.getUniformLocation(program, 'uProj'), view: gl.getUniformLocation(program, 'uView'), fog: gl.getUniformLocation(program, 'uFog'), atlas: gl.getUniformLocation(program, 'uAtlas'),opacity:gl.getUniformLocation(program,'uOpacity') };
+    const U = { proj: gl.getUniformLocation(program, 'uProj'), view: gl.getUniformLocation(program, 'uView'), fog: gl.getUniformLocation(program, 'uFog'), atlas: gl.getUniformLocation(program, 'uAtlas'),facade: gl.getUniformLocation(program, 'uFacade'),opacity:gl.getUniformLocation(program,'uOpacity') };
     // 4x4 atlas: 0 road,1 stone,2 stucco,3 brick,4 roof,5 concrete,6 wood,7 dark metal,
     // 8 glass,9 foliage,10 bark,11 debris,12 canvas,13 rust,14 grass,15 earth.
     function seeded(n) { n = (n * 1664525 + 1013904223) >>> 0; return [n, n / 4294967295]; }
@@ -223,6 +224,27 @@
     }
     createAtlas();
     gl.uniform1i(U.atlas, 0);
+    // Facade images are small, same-origin and optional; a 1x1 fallback prevents errors
+    // while the page is loading. Atlas does not block input or gameplay.
+    const facadeTex=gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,facadeTex);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([169,160,140,255]));
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    gl.uniform1i(U.facade,1);
+    gl.activeTexture(gl.TEXTURE0);
+    const facadeCanvas=window.COP_FACADES?.createAtlas();
+    if(facadeCanvas){
+      gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,facadeTex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,facadeCanvas);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
+      gl.activeTexture(gl.TEXTURE0);
+      document.body.dataset.facades='loaded';
+    }
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
     gl.disable(gl.CULL_FACE);
@@ -279,6 +301,7 @@
         box(staticMesh, x, h - .38, z, w + .4, .3, d + .4, 5, C.grey);
         if (seed % 4 === 0)
             box(staticMesh, x, 0, z + d / 2 + .06, w, 1.15, .17, 11, C.rust);
+        window.COP_FACADES?.building({mesh:staticMesh},x,z,w,d,h,seed);
     }
     function arcade(x, z, len, depth, height, count) {
         for (let k = 0; k < count; k++) {
@@ -347,6 +370,7 @@
         for (let k = 0; k < 3; k++) {
             box(staticMesh, 0, 21.6, z - 8 + k * 8, 91, .2, .25, 6, C.dark);
         }
+        window.COP_FACADES?.manor({mesh:staticMesh},x,z,w,d);
     }
     function duomo() { building(-169, 4, 54, 38, 24, 2, 5); box(staticMesh, -169, 24, 4, 56, 3, 39, 5, C.grey); box(staticMesh, -169, 27, 4, 49, 4, 30, 4, C.tan); for (let i of [-1, 1]) {
         box(staticMesh, -169 + i * 14, 0, 23.5, 7, 20, 1.1, 5, C.tan);
@@ -381,6 +405,7 @@
         // Corrected Piazza dei Signori: open Falconetto passage, Renaissance wings,
         // San Clemente opposite, arcade facades and geometric astronomical dial.
         window.COP_LANDMARKS?.build({mesh:staticMesh,box,quad,ground,cylinder,pushCollision});
+        window.COP_FACADES?.landmark({mesh:staticMesh,box,cylinder});
         // Pedrocchi / university landmark.
         building(169, -100, 63, 38, 16, 7, 5);
         for (let j = 0; j < 6; j++)
@@ -1685,7 +1710,7 @@
     resetMenu();
     requestAnimationFrame(step);
     // Exposed read-only instrumentation supports deterministic browser smoke tests.
-    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, landmarks: window.COP_LANDMARKS?.landmarks||[], nearbyCivilians: allies.filter(a=>a.wanderRadius).length,localConversations:locals.length,patrolGuards:patrols.length,activePatrols:patrols.filter(x=>!!x.a.route).length,patrolPositions:patrols.map(({a})=>({x:a.x,z:a.z,idx:a.routeIndex})),livingCity:!!window.COP_LIVING, blockedObjectives: objectiveData.map((o,i)=>collision(o.at.x,o.at.z,.3)?i:null).filter(i=>i!==null), webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
+    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, landmarks: window.COP_LANDMARKS?.landmarks||[], nearbyCivilians: allies.filter(a=>a.wanderRadius).length,localConversations:locals.length,patrolGuards:patrols.length,activePatrols:patrols.filter(x=>!!x.a.route).length,patrolPositions:patrols.map(({a})=>({x:a.x,z:a.z,idx:a.routeIndex})),livingCity:!!window.COP_LIVING,facades:document.body.dataset.facades||'loading', blockedObjectives: objectiveData.map((o,i)=>collision(o.at.x,o.at.z,.3)?i:null).filter(i=>i!==null), webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
             if (S.waveIds.includes(a.id))
                 a.dead = true;
         } },interact:checkInteract,choose:chooseOption,throwGrenade,advance:()=>advanceQuest(S.quest+1),get objective(){return stage().title;},get triangles(){return staticCount/3;},get stageInfo(){const q=stage();return {index:S.quest,kind:q.kind,at:q.at,dialogueLines:q.lines?.length||0,seconds:q.seconds||0};},skipTime(n){S.time+=n;},tick(){campaignTick(.017);},setQuality(v){cfg.quality=v;}};
