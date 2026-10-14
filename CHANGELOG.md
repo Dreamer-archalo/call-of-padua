@@ -1,3 +1,11 @@
+## 0.8.0 — LIVING CITY
+
+- Nuovo `living_city.js`: finestre ad arco, cupole, lampioni rotondi, fioriere, biciclette, tettoie in tela incurvata e oggetti coerenti per zona.
+- Cinque nuovi NPC con dialoghi opzionali; tre ronde alleate che seguono punti di controllo; un predone con itinerario di pattuglia.
+- Corretto il rilevamento di GamepadList; menu con guida Shift/L3 e comando corsa.
+- Test automatici di regressione della campagna, corsa, dialogo e ronde in ambiente senza GPU.
+- Limiti: grafica procedurale, nessun fotorealismo o equivalenza AAA.
+
 # Changelog
 
 ## Alpha 0.7 — Piazza dei Signori / World Coherence
