@@ -10,6 +10,19 @@ Previously in 0.5: environmental WebGL set dressing loaded into existing culling
 
 This is still an **original low-poly WebGL browser prototype**, NOT a photorealistic AAA game. The world layout is a gameplay interpretation of central Padova, not an architectural survey. No external art or copyright-protected characters were copied. Speech is subtitled, not professionally voice acted.
 
+## Alpha 0.7 — aggiornamento ambientazioni, persone e guida
+
+Questa versione aggiorna il mondo esistente, senza cancellare i cinque capitoli o i salvataggi precedenti.
+
+- **Piazza dei Signori:** modello geometrico originale più riconoscibile, con Torre dell'Orologio, quadrante circolare, apertura ad arco, Palazzo del Capitanio, San Clemente, Gran Guardia, Colonna Marciana, fronti porticati e pavimentazione differenziata. Gli edifici non sono scansioni fedeli al centimetro: la posizione della chiesa è adattata per lasciare libero un punto di missione nel Ghetto.
+- **Veicoli:** carrozzerie sagomate, ruote laterali, vetri inclinati, fari e specchi, segni di danni, variante di fuoristrada; ingresso/uscita senza duplicare l'auto e memorizzazione della posizione del veicolo nel salvataggio.
+- **Guida:** W/S accelerano, frenano e fanno retromarcia; A/D sterzano con inerzia, senza scivolamento laterale da veicolo.
+- **Sopravvissuti:** Sara e Davide sono presenti nel rifugio, con routine di breve pattuglia; le routine sono limitate a zone sicure e rispettano le collisioni.
+- **Controller:** ricerca di gamepad collegati anche quando lo slot 0 è vuoto; D-pad su/giù per aprire mappa/diario, uscita e conferme nei pannelli, report e scelte. Supporto basato su mappatura Gamepad API standard, non certificato su DualShock 4 fisico.
+- **Test:** campagna di 29 transizioni, armi, input, movimento, mappa e pausa e verifica che nessun checkpoint-obiettivo sia collocato dentro un ostacolo. Esegui `python world_test.py` (richiede Playwright + Chromium) per una regressione aggiuntiva con WebGL simulato.
+
+**Qualità:** resta un prototipo WebGL procedurale. Non è fotorealistico né equiparabile a Call of Duty; test con GPU reale, FPS stabili su tutti i dispositivi e DualShock 4 fisico sono ancora necessari.
+
 ## How to play
 
 From the main menu choose New Campaign, an operator and Enter Refuge. On PC use WASD + mouse, E to interact, J journal, M map, R reload, H heal, 1–6 weapons. A standard Gamepad API controller is supported where the platform provides mapping. Touch joysticks are available on mobile. Dialogue advances using E / Enter.
@@ -31,7 +44,7 @@ The storytelling has noncombat walking sections and scripted subtitled conversat
 - Gamepad physical testing and sustained mobile performance still require device tests.
 - No cooperative multiplayer backend, motion captured animation, realistic cutscenes or surveyed buildings.
 - Saved games use browser localStorage (`cop-save-v04`) to retain compatibility with alpha 0.4.
-- Files `director.js`, `scenery.js`, and `cinematic.css` are optional additions; both menu and 3D use the existing core game.
+- Files `director.js`, `scenery.js`, `landmarks.js`, `vehicles.js`, and `cinematic.css` are auxiliary modules; both menu and 3D use the existing core game.
 
 ## Testing
 
