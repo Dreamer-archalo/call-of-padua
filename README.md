@@ -1,6 +1,6 @@
 # CALL OF PADUA / ECHI DEL SILENZIO — COMBAT UPDATE
 
-**Alpha 0.6 | Original narrative FPS prototype for desktop/mobile browser**
+**Alpha 0.8 | Original narrative FPS prototype for desktop/mobile browser**
 
 [Play public build](https://dreamer-archalo.github.io/call-of-padua/)
 
@@ -54,3 +54,15 @@ See `CHANGELOG.md` for details.
 
 ## 0.6 verification
 Campaign smoke tests: 29/29 stages passed. Mocked renderer test: movement, six weapons, firing, recoil, casings and staged reload passed. These are not physical PS4 or real-GPU benchmarks. Avoid assuming smooth 60 FPS on mobile.
+
+## Alpha 0.8 — Living City: controlli, civili e dettagli più organici
+
+- PC: WASD cammina, Shift corre, mouse controlla la visuale; clic sinistro spara e destro mira. R ricarica, E interagisce, G/T granate/fumogene, M/J mappa/diario, 1–6 armi.
+- DualShock 4 / controller standard: stick sinistro movimento, destro mira, L3 corsa, L2 mira, R2 spara, Quadrato interagisce, OPTIONS pausa. Mappatura e prestazioni vanno confermate su controller fisico.
+- Ambientazione a forma meno rigida: arcate e vetrate, fari curvi, lampioni cilindrici, fioriere rotonde, biciclette con ruote circolari e tettoie incurvate. Oggetti disposti per funzione locale: mercati, ambulatorio, portici e tavoli.
+- Cinque civili con dialoghi contestuali: Miriam (Duomo), Omar (Signori), Giulia (Frutta), Elena (Pedrocchi), Luca (Santo).
+- Tre ronde amiche che percorrono itinerari con soste e un predone che pattuglia i margini lontani dalla base. I personaggi possono essere incontrati durante l'esplorazione senza avanzare obbligatoriamente la missione.
+- Correre esisteva già: ora il menu ne indica chiaramente il comando. Corretto rilevamento dei GamepadList che non implementano il metodo Array.find().
+- Test locali con WebGL simulato: cinque missioni/29 passaggi, movimento e sprint, pattuglie e interazione NPC senza errori JavaScript.
+
+Il progetto resta **WebGL procedurale**. Le forme sono più rotonde ma i modelli non sono fotorealistici; per una qualità paragonabile a Call of Duty occorrono modelli 3D PBR, animazioni e pipeline professionali, senza le quali nessuna impostazione “Ultra” basta. FPS su GPU fisiche e DualShock fisico non sono ancora verificati.
