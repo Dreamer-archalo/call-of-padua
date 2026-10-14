@@ -578,7 +578,7 @@
         $('district').textContent = v;
     } }
     function save() { try {
-        localStorage.setItem('cop-save-v04', JSON.stringify({ char: S.char, quest: S.quest, med: S.med, scrap: S.scrap, hp: S.p.hp, weapon: S.weapon, ammo: S.ammo, reserve: S.reserve, position: { x: S.p.x, z: S.p.z, yaw: S.p.yaw }, kills: S.kills,grenades:S.grenades,smoke:S.smoke,branch:S.branch,chapterTimes:S.chapterTimes }));
+        localStorage.setItem('cop-save-v04', JSON.stringify({ char: S.char, quest: S.quest, med: S.med, scrap: S.scrap, hp: S.p.hp, weapon: S.weapon, ammo: S.ammo, reserve: S.reserve, position: { x: S.p.x, z: S.p.z, yaw: S.p.yaw }, kills: S.kills,grenades:S.grenades,smoke:S.smoke,branch:S.branch,chapterTimes:S.chapterTimes,jeep:S.jeep }));
         $('continueBtn').disabled = false;
         return true;
     }
@@ -601,6 +601,7 @@
         S.p.x = s.position?.x ?? -200;
         S.p.z = s.position?.z ?? 119;
         S.p.yaw = s.position?.yaw ?? 1.10;
+        S.jeep = s.jeep && Number.isFinite(s.jeep.x) && Number.isFinite(s.jeep.z)?s.jeep:{x:76,z:121,yaw:0};
         return true;
     }
     catch (e) {
