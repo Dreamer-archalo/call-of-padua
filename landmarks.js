@@ -106,18 +106,18 @@ function build({mesh,box,quad,ground,cylinder,pushCollision}) {
   }
   col(-121,52.3,-49,.16,1.55,8,7,gold);
   // East end: Church of San Clemente, opposing the clock, with triangular pediment.
-  b(-121,0,45.6,25.5,15,13,2,plaster);pushCollision(-121,45.6,25,13);
+  b(-104,0,45.6,22.5,15,13,2,plaster);pushCollision(-104,45.6,22,13);
   const face=38.9;
-  b(-121,0,face,6.1,8.5,.27,7,metal);
-  archX(-121,face+.19,6.0,5.8,9.1,.37,marble);
-  b(-121,8.5,face+.2,8.6,1.0,.75,5,marble);
-  for(const x of [-131.9,-110.1]){
+  b(-104,0,face,6.1,8.5,.27,7,metal);
+  archX(-104,face+.19,6.0,5.8,9.1,.37,marble);
+  b(-104,8.5,face+.2,8.6,1.0,.75,5,marble);
+  for(const x of [-113.9,-94.1]){
     b(x,0,face-.15,1.25,15,.55,5,marble);
     b(x,14.0,face-.1,1.85,1.1,.78,5,marble);
   }
-  q([-135,15.0,face],[-107,15,face],[-121,20,face],[-121,20,face],[0,0,-1],4,brick);
-  q([-135,15.15,face+.12],[-121,20.2,face+.12],[-107,15.15,face+.12],[-135,15.15,face+.12],[0,0,-1],5,ivory);
-  b(-121,16.0,face+.34,4,1.9,.25,5,marble);
+  q([-116,15.0,face],[-92,15,face],[-104,20,face],[-104,20,face],[0,0,-1],4,brick);
+  q([-116,15.15,face+.12],[-104,20.2,face+.12],[-92,15.15,face+.12],[-116,15.15,face+.12],[0,0,-1],5,ivory);
+  b(-104,16.0,face+.34,4,1.9,.25,5,marble);
   // Long lateral rows of shops and balconies. Keep edges open to cross-street passages.
   for(const [sx,facing] of [[-174,1],[-69,-1]]){
     for(let i=0;i<9;i++){
