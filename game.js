@@ -69,7 +69,7 @@
       {title:'PADOVA / ESPLORAZIONE LIBERA',sub:'Campagna conclusa. Esplora la città e aiuta il rifugio.',at:{x:0,z:40},tag:'LIBERO',ch:'EPILOGO',kind:'free'}
     ];
     const missionFromStage=q=>q<5?0:q<11?1:q<17?2:q<23?3:q<29?4:5;
-    const S = { mode: 'menu', char: 'lea', p: { x: -200, z: 119, yaw: 1.10, pitch: -.07, hp: 100, vy: 0 }, camera: 'fps', quest: 0, med: 2, scrap: 0, weapon: 0, ammo: [30, 15, 12, 36, 7, 30], reserve: [150, 75, 60, 180, 35, 120], reloadUntil: 0, lastShot: -20, recoil: 0, kills: 0, injured: 0, time: 0, combatTime: 0, location: '', inVehicle: false, vehicleSpeed: 0, dialogue: null, diagIndex: 0, convCallback: null, toastUntil: 0, zoneUntil: 0, shake: 0, muted: false, grenades:1,smoke:2,smokeClouds:[],grenadeFlight:[],currentChapter:0,stageStart:0,chapterStart:0,chapterTimes:[0,0,0,0,0],branch:{},waveEnd:0,waveIds:[],stageArmed:false,headbob:0,walkAmount:0,allyMode:'follow' };
+    const S = { mode: 'menu', char: 'lea', p: { x: -200, z: 119, yaw: 1.10, pitch: -.07, hp: 100, vy: 0 }, camera: 'fps', quest: 0, med: 2, scrap: 0, weapon: 0, ammo: [30, 15, 12, 36, 7, 30], reserve: [150, 75, 60, 180, 35, 120], reloadUntil: 0, lastShot: -20, recoil: 0, kills: 0, injured: 0, time: 0, combatTime: 0, location: '', inVehicle: false, vehicleSpeed: 0, dialogue: null, diagIndex: 0, convCallback: null, toastUntil: 0, zoneUntil: 0, shake: 0, muted: false, grenades:1,smoke:2,smokeClouds:[],grenadeFlight:[],currentChapter:0,stageStart:0,chapterStart:0,chapterTimes:[0,0,0,0,0],branch:{},waveEnd:0,waveIds:[],stageArmed:false,headbob:0,walkAmount:0,allyMode:'follow', jeep:{x:76,z:121,yaw:0} };
     // Frame-driven animation state. These values are cosmetic and never gate quest progression.
     Object.assign(S,{gunKick:0,gunKickVel:0,gunYaw:0,muzzleUntil:0,shotAnimUntil:0,
       reloadStarted:0,reloadWeapon:-1,equipStarted:-10,equipUntil:-10,ads:0,adsTarget:0,
@@ -446,7 +446,8 @@
         // Camp decorations, improvised market and abandoned vehicles.
         market(-28, 73);
         market(-118, 24);
-        wreck(76, 121, 0, true);
+        // Playable jeep is dynamic: it must not leave a duplicate wreck behind.
+        props.push({x:76,z:121,type:'drivableJeep'});
         wreck(-70, 62);
         wreck(170, -42, 0, true);
         wreck(-34, -65);
@@ -616,7 +617,7 @@
         S.weapon = chars[S.char].weapon;
         S.ammo = weaponData.map(w=>w.mag);
         S.reserve = weaponData.map(w=>w.mag*4);
-        S.kills = 0;S.chapterTimes=[0,0,0,0,0];
+        S.kills = 0;S.chapterTimes=[0,0,0,0,0];S.jeep={x:76,z:121,yaw:0};
     } S.mode = 'play'; S.stageArmed=false;S.stageStart=S.time;S.chapterStart=S.time;S.waveIds=[];S.inVehicle = false; S.dialogue = null; S.p.pitch = -.07; mouse.dx = mouse.dy = 0; key.clear(); visibility('hud', ...(matchMedia('(pointer:coarse)').matches ? ['touch'] : [])); reveal(); window.COP_DIRECTOR?.begin(S); updateHUD(); notify(S.quest === objectiveData.length-1 ? 'ESPLORAZIONE LIBERA — PADOVA CENTRO' : 'RIFUGIO DEL DUOMO · CINQUE MISSIONI DISPONIBILI', 3); save(); }
     function intro() { S.mode = 'intro'; visibility('introMenu'); $('introTitle').textContent = 'NESSUNO VIENE A SALVARCI.'; $('introText').textContent = 'Da 187 giorni Padova è isolata. Il Duomo è un rifugio. Le piazze sono territorio conteso. Marta ha intercettato una voce proveniente dal Palazzo della Ragione.'; }
     function speak(name, lines, callback) { S.mode = 'dialogue'; S.dialogue = { name, lines }; S.diagIndex = 0; S.convCallback = callback || null; $('conversation').classList.remove('hidden'); displayLine(); document.exitPointerLock?.(); }
@@ -888,6 +889,8 @@
             actorModel(dyn, { x: S.p.x, z: S.p.z, yaw:S.p.yaw, isPlayer:true, t: 1, color: chars[S.char].coat, friendly: true });
         if (S.mode === 'play' && S.inVehicle)
             carModel(dyn, S.p.x, S.p.z);
+        else if(Math.hypot(S.p.x-S.jeep.x,S.p.z-S.jeep.z)<160||S.mode==='menu')
+            window.COP_VEHICLES?.build({mesh:dyn,box,quad},S.jeep.x,S.jeep.z,S.jeep.yaw,true,false);
         if (S.mode === 'play' && S.camera === 'fps' && !S.inVehicle)
             gunModel(dyn, cam);
         if(S.mode==='play'&&cfg.quality!=='low'){
@@ -1253,7 +1256,7 @@
       if(pickups.length)return pickups.sort((a,b)=>a.d-b.d)[0];
       if(dist(S.p,rocco)<4.8)return {type:'rocco',name:'SCAMBIA CON ROCCO'};
       if(dist(S.p,marta)<4.8)return {type:'speakMarta',name:'PARLA CON MARTA'};
-      if(dist(S.p,{x:76,z:121})<6.5)return {type:'vehicle',name:'FUORISTRADA · E PER GUIDARE'};
+      if(dist(S.p,S.jeep)<6.5)return {type:'vehicle',name:'FUORISTRADA · E PER GUIDARE'};
       return null;
     }
     function showChoice(){
@@ -1291,7 +1294,7 @@
         if(obj.name==='MEDICAZIONE')S.med++;else if(obj.name==='MUNIZIONI')S.reserve[S.weapon]+=weaponData[S.weapon].mag;else S.scrap+=2;notify('RISORSA RECUPERATA',2);updateHUD();save();
       }else if(obj.type==='rocco')speak('ROCCO',[S.scrap>=3?'Scambio tre materiali per due caricatori.':'Non sprecare colpi, non abbiamo fabbriche per produrne altri.'],()=>{if(S.scrap>=3){S.scrap-=3;S.reserve[S.weapon]+=weaponData[S.weapon].mag*2;updateHUD();}});
       else if(obj.type==='speakMarta')speak('MARTA',['La comunità è ancora viva perché continuiamo a cercarci.','Usa la mappa per orientarti e il diario per sapere cosa devi fare.']);
-      else if(obj.type==='vehicle'){S.inVehicle=!S.inVehicle;S.vehicleSpeed=0;S.moveVelX=0;S.moveVelZ=0;notify(S.inVehicle?'FUORISTRADA · W/S ACCELERA · A/D STERZA':'SEI SCESO DAL VEICOLO',2);}
+      else if(obj.type==='vehicle'){if(S.inVehicle){S.jeep={x:S.p.x,z:S.p.z,yaw:S.p.yaw};}else{S.p.x=S.jeep.x;S.p.z=S.jeep.z;}S.inVehicle=!S.inVehicle;S.vehicleSpeed=0;S.moveVelX=0;S.moveVelZ=0;notify(S.inVehicle?'FUORISTRADA · W/S ACCELERA · A/D STERZA':'SEI SCESO DAL VEICOLO',2);}
     }
     function campaignTick(dt){
       if(S.mode!=='play')return;
