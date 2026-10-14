@@ -494,6 +494,7 @@
         }
         // Narrative set dressing is part of the same spatially culled mesh, not a second renderer.
         window.COP_SCENERY?.build({mesh:staticMesh,box,cylinder,quad,ground,C});
+        window.COP_LIVING?.build({mesh:staticMesh,box,cylinder,quad,ground,C});
         staticCount = staticMesh.length / 12;
         const groups=new Map(), stride=36, cell=85;
         for(let i=0;i<staticMesh.length;i+=stride){
@@ -517,6 +518,20 @@
     sentinel.follow=false;irene.follow=false;tommaso.follow=false;
     // Civilian routines only in the inhabited Duomo refuge, not active battle zones.
     const civilians=[actor('SARA',-175,101,true,C.rust),actor('DAVIDE',-156,113,true,C.grey)];
+    // Non-quest residents retain their own roles and optional contextual conversations.
+    const locals=[
+      {a:actor('MIRIAM',-141,111,true,C.tan),role:'INFERMIERA',lines:['Non facciamo rumore vicino alle tende. I feriti stanno finalmente riposando.','Ho finito le bende, ma conservo ancora una stanza pulita per chi tornerà.']},
+      {a:actor('OMAR',-111,6,true,C.brown),role:'LIBRAIO',lines:['Qui passavano migliaia di persone ogni giorno. Adesso conto i passi delle pattuglie.','Sotto i portici sono rimasti alcuni libri. Li proteggo dalla pioggia, quando posso.']},
+      {a:actor('GIULIA',16,-77,true,C.green),role:'COMMERCIANTE',lines:['Alla Frutta si sentivano le voci dei venditori da lontano. Ho tenuto il banco, non i soldi.','Se vedi qualcuno con la fascia rossa, allontanati dalla piazza. Non cercano scambi.']},
+      {a:actor('ELENA',168,-18,true,C.rust),role:'EX STUDENTESSA',lines:['Il Pedrocchi era pieno fino a tardi. Le sedie sono ancora lì, ma non c’è nessuno a rimetterle a posto.','Un giorno riaprirà. Non domani, forse, ma qualcuno deve ricordare come si faceva.']},
+      {a:actor('LUCA',112,163,true,C.blue),role:'VOLONTARIO',lines:['Il Santo è diventato un punto di passaggio per chi ha perso tutto.','Non toccare le coperte sul sagrato: lì teniamo le scorte per i nuovi arrivati.']}
+    ];
+    const patrols=[
+      {a:actor('RONDA DUOMO',-189,95,true,C.blue),route:[[-189,95],[-191,116],[-170,119],[-159,109]],speed:1.25},
+      {a:actor('GUARDIA SIGNORI',-136,16,true,C.green),route:[[-136,16],[-151,-13],[-114,-18],[-100,14]],speed:1.30},
+      {a:actor('SENTINELLA FRUTTA',-23,-86,true,C.blue),route:[[-23,-86],[2,-87],[24,-85]],speed:1.15}
+    ];
+    for(const {a,route,speed} of patrols){a.route=route.map(([x,z])=>({x,z}));a.routeIndex=0;a.routeWait=0;a.speed=speed;a.patrolGuard=true;}
     for(const a of [sentinel,tommaso,...civilians]) {
       a.homeX=a.x; a.homeZ=a.z; a.wanderRadius=a===sentinel?3.0:4.4;
       a.patrolUntil=0; a.walkTarget=null;
@@ -525,7 +540,9 @@
     function enemy(x, z, type = 'raider') { let a = actor(type === 'infected' ? 'ERRANTE' : 'PREDONE', x, z, false, type === 'infected' ? C.grey : C.rust); a.type = type; a.speed = type === 'infected' ? 1.9 : 1.2; a.hp = type === 'infected' ? 65 : 80; return a; }
     // Threats around contested streets; the starting refuge has a safety zone.
     // Dangerous encounters are activated by the campaign, never inside the starting safehouse.
-    enemy(90,-110);enemy(186,-72,'infected');
+    const roamingRaider=enemy(90,-110);
+    roamingRaider.route=[{x:90,z:-110},{x:126,z:-111},{x:131,z:-88},{x:91,z:-88}];roamingRaider.routeIndex=0;roamingRaider.routeWait=0;
+    enemy(186,-72,'infected');
     // Music/audio synthesized: no external assets. User gesture unlocks AudioContext.
     function sound(freq = 200, dur = .12, type = 'sine', vol = .06) { try {
         audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -1014,6 +1031,15 @@
                 }
                 a.yaw = Math.atan2(dx, -dz);
             }
+            else if (a.patrolGuard && dist(a,S.p)<110) {
+                // Walk a route at human speed, pause at corners, then turn back.
+                const target=a.route[a.routeIndex],dx=target.x-a.x,dz=target.z-a.z,d=Math.hypot(dx,dz);
+                if(d<1.1){if(!a.routeWait)a.routeWait=S.time+1.4+(a.id%3);
+                    if(S.time>=a.routeWait){a.routeIndex=(a.routeIndex+1)%a.route.length;a.routeWait=0;}}
+                else if(!a.routeWait){let step=Math.min(d,dt*a.speed);
+                    const nx=a.x+dx/d*step,nz=a.z+dz/d*step;
+                    if(!collision(nx,nz,.35)){a.x=nx;a.z=nz;a.yaw=Math.atan2(dx,-dz);}else {a.routeIndex=(a.routeIndex+1)%a.route.length;a.routeWait=0;}}
+            }
             else if (a.wanderRadius && dist(a,S.p)<90) {
                 if (S.time>(a.patrolUntil||0)) {
                     const angle=(Math.sin(S.time*.61+a.id*8.11)*21.7)%TAU;
@@ -1050,6 +1076,13 @@
             a.t += dt;
             a.stun = Math.max(0, a.stun - dt);
             let d = dist(p, a);
+            // An unaware raider follows the perimeter instead of staring at the player.
+            if(a.route && d>=56){const waypoint=a.route[a.routeIndex],dx=waypoint.x-a.x,dz=waypoint.z-a.z,rd=Math.hypot(dx,dz);
+              if(rd<1.3){if(!a.routeWait)a.routeWait=S.time+1.8;
+                if(S.time>=a.routeWait){a.routeIndex=(a.routeIndex+1)%a.route.length;a.routeWait=0;}}
+              else if(!a.routeWait){const st=Math.min(rd,dt*.85),nx=a.x+dx/rd*st,nz=a.z+dz/rd*st;
+                if(!collision(nx,nz,.48)){a.x=nx;a.z=nz;a.yaw=Math.atan2(dx,-dz);}else a.routeIndex=(a.routeIndex+1)%a.route.length;}
+            }
             if (d < 70 && !S.smokeClouds.some(s=>s.end>S.time && Math.hypot(s.x-p.x,s.z-p.z)<19)) {
                 activeEnemies++;
                 let dx = p.x - a.x, dz = p.z - a.z;
@@ -1257,6 +1290,8 @@
       if(pickups.length)return pickups.sort((a,b)=>a.d-b.d)[0];
       if(dist(S.p,rocco)<4.8)return {type:'rocco',name:'SCAMBIA CON ROCCO'};
       if(dist(S.p,marta)<4.8)return {type:'speakMarta',name:'PARLA CON MARTA'};
+      const nearbyLocal=locals.filter(o=>dist(S.p,o.a)<5.5).sort((a,b)=>dist(S.p,a.a)-dist(S.p,b.a))[0];
+      if(nearbyLocal)return {type:'local',name:'PARLA CON '+nearbyLocal.a.name,local:nearbyLocal};
       if(dist(S.p,S.jeep)<6.5)return {type:'vehicle',name:'FUORISTRADA · E PER GUIDARE'};
       return null;
     }
@@ -1295,6 +1330,7 @@
         if(obj.name==='MEDICAZIONE')S.med++;else if(obj.name==='MUNIZIONI')S.reserve[S.weapon]+=weaponData[S.weapon].mag;else S.scrap+=2;notify('RISORSA RECUPERATA',2);updateHUD();save();
       }else if(obj.type==='rocco')speak('ROCCO',[S.scrap>=3?'Scambio tre materiali per due caricatori.':'Non sprecare colpi, non abbiamo fabbriche per produrne altri.'],()=>{if(S.scrap>=3){S.scrap-=3;S.reserve[S.weapon]+=weaponData[S.weapon].mag*2;updateHUD();}});
       else if(obj.type==='speakMarta')speak('MARTA',['La comunità è ancora viva perché continuiamo a cercarci.','Usa la mappa per orientarti e il diario per sapere cosa devi fare.']);
+      else if(obj.type==='local')speak(obj.local.a.name,obj.local.lines);
       else if(obj.type==='vehicle'){if(S.inVehicle){S.jeep={x:S.p.x,z:S.p.z,yaw:S.p.yaw};}else{S.p.x=S.jeep.x;S.p.z=S.jeep.z;}S.inVehicle=!S.inVehicle;S.vehicleSpeed=0;S.moveVelX=0;S.moveVelZ=0;notify(S.inVehicle?'FUORISTRADA · W/S ACCELERA · A/D STERZA':'SEI SCESO DAL VEICOLO',2);}
     }
     function campaignTick(dt){
@@ -1601,7 +1637,7 @@
     $('touchRun').addEventListener('pointerdown', () => touchInput.sprint = true);
     for (const ev of ['pointerup', 'pointercancel'])
         $('touchRun').addEventListener(ev, () => touchInput.sprint = false);
-    function pollPad() { const pad = navigator.getGamepads?.()?.find(p => p?.connected); if (!pad)
+    function pollPad() { const pad = [...(navigator.getGamepads?.()||[])].find(p => p?.connected); if (!pad)
         return; $('padStatus').textContent = 'DUALSHOCK / GAMEPAD'; const next = pad.buttons.map(b => b.pressed); let edge = i => next[i] && !padState[i]; if (S.mode === 'play') {
         S.adsTarget=pad.buttons[6]?.pressed?1:0;
         if (pad.buttons[7]?.pressed)
@@ -1649,7 +1685,7 @@
     resetMenu();
     requestAnimationFrame(step);
     // Exposed read-only instrumentation supports deterministic browser smoke tests.
-    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, landmarks: window.COP_LANDMARKS?.landmarks||[], nearbyCivilians: allies.filter(a=>a.wanderRadius).length, blockedObjectives: objectiveData.map((o,i)=>collision(o.at.x,o.at.z,.3)?i:null).filter(i=>i!==null), webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
+    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, landmarks: window.COP_LANDMARKS?.landmarks||[], nearbyCivilians: allies.filter(a=>a.wanderRadius).length,localConversations:locals.length,patrolGuards:patrols.length,activePatrols:patrols.filter(x=>!!x.a.route).length,patrolPositions:patrols.map(({a})=>({x:a.x,z:a.z,idx:a.routeIndex})),livingCity:!!window.COP_LIVING, blockedObjectives: objectiveData.map((o,i)=>collision(o.at.x,o.at.z,.3)?i:null).filter(i=>i!==null), webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
             if (S.waveIds.includes(a.id))
                 a.dead = true;
         } },interact:checkInteract,choose:chooseOption,throwGrenade,advance:()=>advanceQuest(S.quest+1),get objective(){return stage().title;},get triangles(){return staticCount/3;},get stageInfo(){const q=stage();return {index:S.quest,kind:q.kind,at:q.at,dialogueLines:q.lines?.length||0,seconds:q.seconds||0};},skipTime(n){S.time+=n;},tick(){campaignTick(.017);},setQuality(v){cfg.quality=v;}};
