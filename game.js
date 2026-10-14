@@ -303,10 +303,11 @@
     } }
     function barrel(x, z) { cylinder(staticMesh, x, 0, z, .55, 1.2, 9, 13, C.grey); box(staticMesh, x, .31, z, 1.11, .13, 1.11, 7, C.grey); box(staticMesh, x, 1.0, z, 1.11, .12, 1.11, 7, C.grey); }
     function fence(x, z, w, d) { box(staticMesh, x, 0, z, w, 1.75, d, 6, C.brown); box(staticMesh, x, 1.32, z, w, 0.13, d + .08, 7, C.dark); }
-    function wreck(x, z, angle = 0, olive = false) { const a = { x, z, angle, olive }; props.push({ ...a, type: 'wreck' }); const arr = staticMesh; function add(w, h, d, dy, mat, col) { box(arr, x, dy, z, w, h, d, mat, col); } add(3.8, .9, 6.2, .5, olive ? 7 : 13, olive ? C.green : C.rust); add(3.2, 1.15, 3.4, 1.4, 7, C.dark); for (let k of [-1, 1])
-        for (let l of [-1, 1]) {
-            cylinder(arr, x + k * 1.94, .25, z + l * 1.9, .61, .22, 10, 7, C.dark);
-        } add(2.6, .12, 3.0, 2.58, 13, C.rust); }
+    function wreck(x, z, angle = 0, olive = false) {
+        props.push({ x, z, angle, olive, type:'wreck' });
+        if(window.COP_VEHICLES) window.COP_VEHICLES.build({mesh:staticMesh,box,quad},x,z,angle,olive,true);
+        else box(staticMesh,x,.4,z,3.8,1.1,6.3,13,olive?C.green:C.rust);
+    }
     function bench(x, z) { box(staticMesh, x, .7, z, 2.7, .2, .7, 6, C.brown); for (const i of [-1, 1])
         box(staticMesh, x + i * .98, 0, z, .17, .7, .67, 7, C.dark); box(staticMesh, x, .8, z - .28, 2.7, .85, .17, 6, C.brown); }
     function water(x, z, w, d) { ground(staticMesh, x, z, w, d, 8, [.55, .63, .61], .04); }
@@ -808,9 +809,10 @@
         box(arr, x + .55, torsoY + .1, z - .64, .26, .22, 1.12, 7, C.dark);
         box(arr, x + .55, torsoY + .2, z - .83, .16, .15, .85, 7, C.grey);
     } }
-    function carModel(arr, x, z) { box(arr, x, .22, z, 3.4, .85, 5.5, 13, C.green); box(arr, x, 1.03, z + .25, 3.0, 1.05, 2.65, 8, C.dark); box(arr, x, 1.94, z + .2, 3.0, .13, 3.1, 7, C.dark); for (let dx of [-1.8, 1.8])
-        for (let dz of [-1.8, 1.8])
-            cylinder(arr, x + dx, .22, z + dz, .54, .25, 8, 7, C.dark); box(arr, x, 1.3, z - 2.6, 1.4, .2, .18, 7, C.grey); }
+    function carModel(arr, x, z) {
+        if(window.COP_VEHICLES)window.COP_VEHICLES.build({mesh:arr,box,quad},x,z,S.p.yaw,true,false);
+        else box(arr,x,.4,z,3.5,1.1,6.2,13,C.green);
+    }
     function gunModel(arr, cam) {
         let a = S.p.yaw, p = S.p.pitch, r = S.recoil, ca = Math.cos(a), sa = Math.sin(a), cp = Math.cos(p), sp = Math.sin(p);
         let forward = [sa * cp, sp, -ca * cp], right = [ca, 0, sa], up = [-sa * sp, cp, ca * sp];
