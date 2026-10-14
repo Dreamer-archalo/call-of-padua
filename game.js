@@ -69,7 +69,7 @@
       {title:'PADOVA / ESPLORAZIONE LIBERA',sub:'Campagna conclusa. Esplora la città e aiuta il rifugio.',at:{x:0,z:40},tag:'LIBERO',ch:'EPILOGO',kind:'free'}
     ];
     const missionFromStage=q=>q<5?0:q<11?1:q<17?2:q<23?3:q<29?4:5;
-    const S = { mode: 'menu', char: 'lea', p: { x: -200, z: 119, yaw: 1.10, pitch: -.07, hp: 100, vy: 0 }, camera: 'fps', quest: 0, med: 2, scrap: 0, weapon: 0, ammo: [30, 15, 12, 36, 7, 30], reserve: [150, 75, 60, 180, 35, 120], reloadUntil: 0, lastShot: -20, recoil: 0, kills: 0, injured: 0, time: 0, combatTime: 0, location: '', inVehicle: false, vehicleSpeed: 0, dialogue: null, diagIndex: 0, convCallback: null, toastUntil: 0, zoneUntil: 0, shake: 0, muted: false, grenades:1,smoke:2,smokeClouds:[],grenadeFlight:[],currentChapter:0,stageStart:0,chapterStart:0,chapterTimes:[0,0,0,0,0],branch:{},waveEnd:0,waveIds:[],stageArmed:false,headbob:0,walkAmount:0,allyMode:'follow' };
+    const S = { mode: 'menu', char: 'lea', p: { x: -200, z: 119, yaw: 1.10, pitch: -.07, hp: 100, vy: 0 }, camera: 'fps', quest: 0, med: 2, scrap: 0, weapon: 0, ammo: [30, 15, 12, 36, 7, 30], reserve: [150, 75, 60, 180, 35, 120], reloadUntil: 0, lastShot: -20, recoil: 0, kills: 0, injured: 0, time: 0, combatTime: 0, location: '', inVehicle: false, vehicleSpeed: 0, dialogue: null, diagIndex: 0, convCallback: null, toastUntil: 0, zoneUntil: 0, shake: 0, muted: false, grenades:1,smoke:2,smokeClouds:[],grenadeFlight:[],currentChapter:0,stageStart:0,chapterStart:0,chapterTimes:[0,0,0,0,0],branch:{},waveEnd:0,waveIds:[],stageArmed:false,headbob:0,walkAmount:0,allyMode:'follow', jeep:{x:76,z:121,yaw:0} };
     // Frame-driven animation state. These values are cosmetic and never gate quest progression.
     Object.assign(S,{gunKick:0,gunKickVel:0,gunYaw:0,muzzleUntil:0,shotAnimUntil:0,
       reloadStarted:0,reloadWeapon:-1,equipStarted:-10,equipUntil:-10,ads:0,adsTarget:0,
@@ -303,10 +303,11 @@
     } }
     function barrel(x, z) { cylinder(staticMesh, x, 0, z, .55, 1.2, 9, 13, C.grey); box(staticMesh, x, .31, z, 1.11, .13, 1.11, 7, C.grey); box(staticMesh, x, 1.0, z, 1.11, .12, 1.11, 7, C.grey); }
     function fence(x, z, w, d) { box(staticMesh, x, 0, z, w, 1.75, d, 6, C.brown); box(staticMesh, x, 1.32, z, w, 0.13, d + .08, 7, C.dark); }
-    function wreck(x, z, angle = 0, olive = false) { const a = { x, z, angle, olive }; props.push({ ...a, type: 'wreck' }); const arr = staticMesh; function add(w, h, d, dy, mat, col) { box(arr, x, dy, z, w, h, d, mat, col); } add(3.8, .9, 6.2, .5, olive ? 7 : 13, olive ? C.green : C.rust); add(3.2, 1.15, 3.4, 1.4, 7, C.dark); for (let k of [-1, 1])
-        for (let l of [-1, 1]) {
-            cylinder(arr, x + k * 1.94, .25, z + l * 1.9, .61, .22, 10, 7, C.dark);
-        } add(2.6, .12, 3.0, 2.58, 13, C.rust); }
+    function wreck(x, z, angle = 0, olive = false) {
+        props.push({ x, z, angle, olive, type:'wreck' });
+        if(window.COP_VEHICLES) window.COP_VEHICLES.build({mesh:staticMesh,box,quad},x,z,angle,olive,true);
+        else box(staticMesh,x,.4,z,3.8,1.1,6.3,13,olive?C.green:C.rust);
+    }
     function bench(x, z) { box(staticMesh, x, .7, z, 2.7, .2, .7, 6, C.brown); for (const i of [-1, 1])
         box(staticMesh, x + i * .98, 0, z, .17, .7, .67, 7, C.dark); box(staticMesh, x, .8, z - .28, 2.7, .85, .17, 6, C.brown); }
     function water(x, z, w, d) { ground(staticMesh, x, z, w, d, 8, [.55, .63, .61], .04); }
@@ -377,12 +378,9 @@
         manor();
         duomo();
         santo(); // Important landmarks.
-        // Torre dell'Orologio at Piazza dei Signori.
-        building(-121, -49, 32, 20, 20, 3, 3);
-        box(staticMesh, -121, 19, -49, 17, 24, 12, 5, C.tan);
-        box(staticMesh, -121, 42, -49, 17, 3, 15, 4, C.rust);
-        box(staticMesh, -121, 31, -38.8, 7, 7, .2, 8, C.blue);
-        box(staticMesh, -121, 34.2, -38.66, 3.8, .22, .2, 5, C.tan);
+        // Corrected Piazza dei Signori: open Falconetto passage, Renaissance wings,
+        // San Clemente opposite, arcade facades and geometric astronomical dial.
+        window.COP_LANDMARKS?.build({mesh:staticMesh,box,quad,ground,cylinder,pushCollision});
         // Pedrocchi / university landmark.
         building(169, -100, 63, 38, 16, 7, 5);
         for (let j = 0; j < 6; j++)
@@ -424,7 +422,8 @@
             building(-257, -88 + i * 40, 20, 35, 14 + (i % 3) * 4, s++);
         }
         // Additional alley buildings, deliberately sparse to keep map navigable.
-        for (let i = 0; i < 4; i++) {
+        for (let i = 1; i < 4; i++) {
+            // i=0 occupied the Piazza dei Signori access to the market; leave it open.
             building(-80 + i * 25, -36, 20, 25, 17 + i * 2, s++);
         }
         for (let i = 0; i < 3; i++) {
@@ -447,7 +446,8 @@
         // Camp decorations, improvised market and abandoned vehicles.
         market(-28, 73);
         market(-118, 24);
-        wreck(76, 121, 0, true);
+        // Playable jeep is dynamic: it must not leave a duplicate wreck behind.
+        props.push({x:76,z:121,type:'drivableJeep'});
         wreck(-70, 62);
         wreck(170, -42, 0, true);
         wreck(-34, -65);
@@ -515,6 +515,12 @@
     function actor(name, x, z, friendly = true, color) { let a = { id: ++botSeq, name, x, z, yaw: 0, hp: friendly ? 100 : 80, friendly, color: color || C.green, dead: false, t: Math.random() * 100, speed: .7 + rnd(0, .5), attackAt: 0, stun: 0, follow: false }; (friendly ? allies : enemies).push(a); return a; }
     let marta = actor('MARTA', -165, 79, true, C.green), rocco = actor('ROCCO', -150, 99, true, C.brown), sentinel = actor('GUARDIA', -182, 67, true, C.blue), stefano = actor('STEFANO', 135, 179, true, C.grey), irene=actor('IRENE',34,-58,true,C.rust),tommaso=actor('TOMMASO',-185,92,true,C.grey);
     sentinel.follow=false;irene.follow=false;tommaso.follow=false;
+    // Civilian routines only in the inhabited Duomo refuge, not active battle zones.
+    const civilians=[actor('SARA',-175,101,true,C.rust),actor('DAVIDE',-156,113,true,C.grey)];
+    for(const a of [sentinel,tommaso,...civilians]) {
+      a.homeX=a.x; a.homeZ=a.z; a.wanderRadius=a===sentinel?3.0:4.4;
+      a.patrolUntil=0; a.walkTarget=null;
+    }
     stefano.follow = false;
     function enemy(x, z, type = 'raider') { let a = actor(type === 'infected' ? 'ERRANTE' : 'PREDONE', x, z, false, type === 'infected' ? C.grey : C.rust); a.type = type; a.speed = type === 'infected' ? 1.9 : 1.2; a.hp = type === 'infected' ? 65 : 80; return a; }
     // Threats around contested streets; the starting refuge has a safety zone.
@@ -572,7 +578,7 @@
         $('district').textContent = v;
     } }
     function save() { try {
-        localStorage.setItem('cop-save-v04', JSON.stringify({ char: S.char, quest: S.quest, med: S.med, scrap: S.scrap, hp: S.p.hp, weapon: S.weapon, ammo: S.ammo, reserve: S.reserve, position: { x: S.p.x, z: S.p.z, yaw: S.p.yaw }, kills: S.kills,grenades:S.grenades,smoke:S.smoke,branch:S.branch,chapterTimes:S.chapterTimes }));
+        localStorage.setItem('cop-save-v04', JSON.stringify({ char: S.char, quest: S.quest, med: S.med, scrap: S.scrap, hp: S.p.hp, weapon: S.weapon, ammo: S.ammo, reserve: S.reserve, position: { x: S.p.x, z: S.p.z, yaw: S.p.yaw }, kills: S.kills,grenades:S.grenades,smoke:S.smoke,branch:S.branch,chapterTimes:S.chapterTimes,jeep:S.jeep }));
         $('continueBtn').disabled = false;
         return true;
     }
@@ -595,6 +601,7 @@
         S.p.x = s.position?.x ?? -200;
         S.p.z = s.position?.z ?? 119;
         S.p.yaw = s.position?.yaw ?? 1.10;
+        S.jeep = s.jeep && Number.isFinite(s.jeep.x) && Number.isFinite(s.jeep.z)?s.jeep:{x:76,z:121,yaw:0};
         return true;
     }
     catch (e) {
@@ -611,7 +618,7 @@
         S.weapon = chars[S.char].weapon;
         S.ammo = weaponData.map(w=>w.mag);
         S.reserve = weaponData.map(w=>w.mag*4);
-        S.kills = 0;S.chapterTimes=[0,0,0,0,0];
+        S.kills = 0;S.chapterTimes=[0,0,0,0,0];S.jeep={x:76,z:121,yaw:0};
     } S.mode = 'play'; S.stageArmed=false;S.stageStart=S.time;S.chapterStart=S.time;S.waveIds=[];S.inVehicle = false; S.dialogue = null; S.p.pitch = -.07; mouse.dx = mouse.dy = 0; key.clear(); visibility('hud', ...(matchMedia('(pointer:coarse)').matches ? ['touch'] : [])); reveal(); window.COP_DIRECTOR?.begin(S); updateHUD(); notify(S.quest === objectiveData.length-1 ? 'ESPLORAZIONE LIBERA — PADOVA CENTRO' : 'RIFUGIO DEL DUOMO · CINQUE MISSIONI DISPONIBILI', 3); save(); }
     function intro() { S.mode = 'intro'; visibility('introMenu'); $('introTitle').textContent = 'NESSUNO VIENE A SALVARCI.'; $('introText').textContent = 'Da 187 giorni Padova è isolata. Il Duomo è un rifugio. Le piazze sono territorio conteso. Marta ha intercettato una voce proveniente dal Palazzo della Ragione.'; }
     function speak(name, lines, callback) { S.mode = 'dialogue'; S.dialogue = { name, lines }; S.diagIndex = 0; S.convCallback = callback || null; $('conversation').classList.remove('hidden'); displayLine(); document.exitPointerLock?.(); }
@@ -804,9 +811,10 @@
         box(arr, x + .55, torsoY + .1, z - .64, .26, .22, 1.12, 7, C.dark);
         box(arr, x + .55, torsoY + .2, z - .83, .16, .15, .85, 7, C.grey);
     } }
-    function carModel(arr, x, z) { box(arr, x, .22, z, 3.4, .85, 5.5, 13, C.green); box(arr, x, 1.03, z + .25, 3.0, 1.05, 2.65, 8, C.dark); box(arr, x, 1.94, z + .2, 3.0, .13, 3.1, 7, C.dark); for (let dx of [-1.8, 1.8])
-        for (let dz of [-1.8, 1.8])
-            cylinder(arr, x + dx, .22, z + dz, .54, .25, 8, 7, C.dark); box(arr, x, 1.3, z - 2.6, 1.4, .2, .18, 7, C.grey); }
+    function carModel(arr, x, z) {
+        if(window.COP_VEHICLES)window.COP_VEHICLES.build({mesh:arr,box,quad},x,z,S.p.yaw,true,false);
+        else box(arr,x,.4,z,3.5,1.1,6.2,13,C.green);
+    }
     function gunModel(arr, cam) {
         let a = S.p.yaw, p = S.p.pitch, r = S.recoil, ca = Math.cos(a), sa = Math.sin(a), cp = Math.cos(p), sp = Math.sin(p);
         let forward = [sa * cp, sp, -ca * cp], right = [ca, 0, sa], up = [-sa * sp, cp, ca * sp];
@@ -882,6 +890,8 @@
             actorModel(dyn, { x: S.p.x, z: S.p.z, yaw:S.p.yaw, isPlayer:true, t: 1, color: chars[S.char].coat, friendly: true });
         if (S.mode === 'play' && S.inVehicle)
             carModel(dyn, S.p.x, S.p.z);
+        else if(Math.hypot(S.p.x-S.jeep.x,S.p.z-S.jeep.z)<160||S.mode==='menu')
+            window.COP_VEHICLES?.build({mesh:dyn,box,quad},S.jeep.x,S.jeep.z,S.jeep.yaw,true,false);
         if (S.mode === 'play' && S.camera === 'fps' && !S.inVehicle)
             gunModel(dyn, cam);
         if(S.mode==='play'&&cfg.quality!=='low'){
@@ -939,7 +949,7 @@
             mx += 1;
         mx += touchInput.move.x;
         mz += -touchInput.move.y;
-        let pad = navigator.getGamepads?.()?.[0];
+        let pad = [...(navigator.getGamepads?.()||[])].find(p=>p?.connected);
         if (pad && pad.connected) {
             mx += Math.abs(pad.axes[0] || 0) > .13 ? pad.axes[0] : 0;
             mz -= Math.abs(pad.axes[1] || 0) > .13 ? pad.axes[1] : 0;
@@ -958,11 +968,17 @@
         let speed = ((keyOn('ShiftLeft', 'ShiftRight') || touchInput.sprint || pad?.buttons?.[10]?.pressed) ? 7.6 : 4.8)*(chars[S.char]?.speed||1);
         if (keyOn('ControlLeft', 'KeyC'))
             speed *= .55;
-        if (S.inVehicle)
-            speed = 15 + Math.abs(S.vehicleSpeed) * 7;
+        if (S.inVehicle) {
+            // Vehicle steering: A/D turn wheels, W/S control acceleration and reverse.
+            const requestedSpeed=mz>0?15:mz<0?-5:0;
+            S.vehicleSpeed=lerp(S.vehicleSpeed,requestedSpeed,Math.min(1,dt*(mz?1.7:.8)));
+            p.yaw+=mx*dt*(.60+Math.min(Math.abs(S.vehicleSpeed),12)*.023)*(S.vehicleSpeed<-.2?-1:1);
+            speed=1;
+            mx=0;mz=S.vehicleSpeed;
+        }
         const sx = Math.cos(p.yaw) * mx + Math.sin(p.yaw) * mz, sz = Math.sin(p.yaw) * mx - Math.cos(p.yaw) * mz;
         // Mass/inertia: accelerate, coast briefly and settle without sliding through geometry.
-        const smoothing=1-Math.exp(-dt*(S.inVehicle?2.5:10));
+        const smoothing=1-Math.exp(-dt*(S.inVehicle?4.0:10));
         S.moveVelX=lerp(S.moveVelX,sx*speed,smoothing);
         S.moveVelZ=lerp(S.moveVelZ,sz*speed,smoothing);
         let nx=p.x+S.moveVelX*dt,nz=p.z+S.moveVelZ*dt;
@@ -998,8 +1014,23 @@
                 }
                 a.yaw = Math.atan2(dx, -dz);
             }
-            else
-                a.yaw = Math.sin(S.time * .23 + a.t) * .3;
+            else if (a.wanderRadius && dist(a,S.p)<90) {
+                if (S.time>(a.patrolUntil||0)) {
+                    const angle=(Math.sin(S.time*.61+a.id*8.11)*21.7)%TAU;
+                    const radius=1.1+(Math.cos(S.time*.28+a.id)*.5+.5)*(a.wanderRadius-1.1);
+                    a.walkTarget={x:a.homeX+Math.cos(angle)*radius,z:a.homeZ+Math.sin(angle)*radius};
+                    a.patrolUntil=S.time+2.8+(a.id%4)*1.3;
+                }
+                if(a.walkTarget){
+                    const dx=a.walkTarget.x-a.x,dz=a.walkTarget.z-a.z,d=Math.hypot(dx,dz);
+                    if(d>.35){const stride=Math.min(d,dt*(a===sentinel?.92:.66));
+                        if(!collision(a.x+dx/d*stride,a.z+dz/d*stride,.3)){
+                            a.x+=dx/d*stride;a.z+=dz/d*stride;
+                        }
+                        a.yaw=Math.atan2(dx,-dz);
+                    }else a.yaw+=Math.sin(S.time+a.id)*dt*.08;
+                }
+            } else a.yaw = Math.sin(S.time * .23 + a.t) * .3;
             const targetMotion=Math.min(1.6,Math.hypot(a.x-oldX,a.z-oldZ)/Math.max(dt,.001)/4.5);
             a.motionSpeed=lerp(a.motionSpeed||0,targetMotion,Math.min(1,dt*9));
             a.stride=(a.stride||0)+dt*(6.3+2.7*a.motionSpeed)*a.motionSpeed;
@@ -1226,7 +1257,7 @@
       if(pickups.length)return pickups.sort((a,b)=>a.d-b.d)[0];
       if(dist(S.p,rocco)<4.8)return {type:'rocco',name:'SCAMBIA CON ROCCO'};
       if(dist(S.p,marta)<4.8)return {type:'speakMarta',name:'PARLA CON MARTA'};
-      if(dist(S.p,{x:76,z:121})<5.3)return {type:'vehicle',name:'FUORISTRADA · E PER GUIDARE'};
+      if(dist(S.p,S.jeep)<6.5)return {type:'vehicle',name:'FUORISTRADA · E PER GUIDARE'};
       return null;
     }
     function showChoice(){
@@ -1264,7 +1295,7 @@
         if(obj.name==='MEDICAZIONE')S.med++;else if(obj.name==='MUNIZIONI')S.reserve[S.weapon]+=weaponData[S.weapon].mag;else S.scrap+=2;notify('RISORSA RECUPERATA',2);updateHUD();save();
       }else if(obj.type==='rocco')speak('ROCCO',[S.scrap>=3?'Scambio tre materiali per due caricatori.':'Non sprecare colpi, non abbiamo fabbriche per produrne altri.'],()=>{if(S.scrap>=3){S.scrap-=3;S.reserve[S.weapon]+=weaponData[S.weapon].mag*2;updateHUD();}});
       else if(obj.type==='speakMarta')speak('MARTA',['La comunità è ancora viva perché continuiamo a cercarci.','Usa la mappa per orientarti e il diario per sapere cosa devi fare.']);
-      else if(obj.type==='vehicle'){S.inVehicle=!S.inVehicle;notify(S.inVehicle?'FUORISTRADA IN MOTO · WASD PER GUIDARE':'SEI SCESO DAL VEICOLO',2);}
+      else if(obj.type==='vehicle'){if(S.inVehicle){S.jeep={x:S.p.x,z:S.p.z,yaw:S.p.yaw};}else{S.p.x=S.jeep.x;S.p.z=S.jeep.z;}S.inVehicle=!S.inVehicle;S.vehicleSpeed=0;S.moveVelX=0;S.moveVelZ=0;notify(S.inVehicle?'FUORISTRADA · W/S ACCELERA · A/D STERZA':'SEI SCESO DAL VEICOLO',2);}
     }
     function campaignTick(dt){
       if(S.mode!=='play')return;
@@ -1585,12 +1616,16 @@
             reload();
         if (edge(9))
             pause();
-        if (edge(12))showMap();if(edge(4))throwGrenade(true);if(edge(5))throwGrenade(false);
+        if (edge(12))showMap();if(edge(13))showJournal();if(edge(4))throwGrenade(true);if(edge(5))throwGrenade(false);if(edge(11)){S.allyMode=S.allyMode==='follow'?'hold':'follow';notify(S.allyMode==='follow'?'SQUADRA: SEGUITEMI':'SQUADRA: MANTENETE LA POSIZIONE',2);}
     }
     else if (S.mode === 'dialogue' && edge(0))
         advanceLine();
     else if (S.mode === 'pause' && edge(9))
         pause();
+    else if (S.mode === 'map' && (edge(12)||edge(1)))showMap();
+    else if (S.mode === 'journal' && (edge(13)||edge(1)))showJournal();
+    else if (S.mode === 'brief' && edge(0))$('briefNext')?.click();
+    else if (S.mode === 'choice' && (edge(0)||edge(1)))chooseOption(edge(0)?0:1);
     else if (S.mode === 'intro' && edge(0))
         start('story');
     else if (S.mode === 'menu' && edge(0)) {
@@ -1614,7 +1649,7 @@
     resetMenu();
     requestAnimationFrame(step);
     // Exposed read-only instrumentation supports deterministic browser smoke tests.
-    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
+    window.COP_DEBUG = { get state() { return { mode: S.mode, quest: S.quest, chapter: missionFromStage(S.quest), char: S.char, weapon:S.weapon, grenades:S.grenades, smoke:S.smoke, choices:S.branch, x: S.p.x, z: S.p.z, health: S.p.hp, enemies: enemies.filter(a => !a.dead).length, drawnTriangles: staticCount / 3, landmarks: window.COP_LANDMARKS?.landmarks||[], nearbyCivilians: allies.filter(a=>a.wanderRadius).length, blockedObjectives: objectiveData.map((o,i)=>collision(o.at.x,o.at.z,.3)?i:null).filter(i=>i!==null), webgl: true,ads:S.ads,gunKick:S.gunKick,reloading:S.reloadUntil>S.time,reloadFraction:S.reloadUntil>S.time?clamp((S.time-S.reloadStarted)/weaponData[S.weapon].reload,0,1):0,motionSpeed:S.motionSpeed,quality:cfg.quality,muzzle:S.time<S.muzzleUntil,casings:S.casings.length }; }, setPosition(x, z) { S.p.x = x; S.p.z = z; }, setQuest(q) { S.quest = clamp(q, 0, objectiveData.length-1);S.stageArmed=false;updateHUD(); }, endEnemies() { for (let a of enemies) {
             if (S.waveIds.includes(a.id))
                 a.dead = true;
         } },interact:checkInteract,choose:chooseOption,throwGrenade,advance:()=>advanceQuest(S.quest+1),get objective(){return stage().title;},get triangles(){return staticCount/3;},get stageInfo(){const q=stage();return {index:S.quest,kind:q.kind,at:q.at,dialogueLines:q.lines?.length||0,seconds:q.seconds||0};},skipTime(n){S.time+=n;},tick(){campaignTick(.017);},setQuality(v){cfg.quality=v;}};

@@ -1,5 +1,16 @@
 # Changelog
 
+## Alpha 0.7 — Piazza dei Signori / World Coherence
+
+- Landmark originali: Palazzo del Capitanio, torre con apertura passante, orologio circolare e cupola, San Clemente, Loggia, Colonna Marciana, portici e giunti del selciato.
+- Collisori corretti: punto missione Ghetto accessibile (zero obiettivi bloccati al test); rimosso l'edificio che chiudeva il collegamento tra piazze.
+- Mezzi: geometrie più credibili con ruote, fari, finestrini, specchi e danni; fuoristrada senza clone, sterzo/accelerazione realistici per il livello del prototipo e posizione salvata.
+- Due civili aggiuntivi nel rifugio con passeggiate autonome e limitate; alleati già presenti conservati.
+- Controller: ricerca di slot collegati, mappa/diario, navigazione nei pannelli, conferma di scelte/report.
+- Test manualmente eseguiti con renderer simulato: 29 checkpoint della campagna, sei armi, movimento, ricarica, regressione gamepad e accessibilità obiettivi.
+
+**Limiti:** non fotorealistico; mappatura interpretativa di Padova, non rilievo metrico. Rendering GPU reale, FPS prolungati, joystick PS4 fisico e compatibilità cross-device non certificati.
+
 ## Alpha 0.6 — Combat & Animation
 
 - Six weapon silhouettes: receivers, magazines, sights, handguards, optics, barrel details and suppressor-like muzzle geometry.
